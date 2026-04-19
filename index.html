@@ -64,7 +64,6 @@
         h1 { margin: 0; font-size: 3rem; color: #FF1493; }
         p { font-size: 1.8rem; margin: 15px 0 0 0; color: #555; }
 
-        /* Grass sits in front of the castle, behind entities */
         .grass {
             position: fixed; bottom: 0; width: 100%; min-height: 25vh;
             background-color: #7CFC00; border-top: 10px solid #32CD32;
@@ -89,17 +88,15 @@
 
         /* --- THE BEAUTIFUL CASTLE --- */
         #castle {
-            position: fixed; bottom: 15vh; /* Sits slightly into the grass */
+            position: fixed; bottom: 15vh; 
             left: 50%; transform: translateX(-50%);
             width: 500px; height: 350px;
-            background: linear-gradient(135deg, #bdc3c7, #95a5a6); /* Stone texture */
+            background: linear-gradient(135deg, #bdc3c7, #95a5a6); 
             border: 4px solid #7f8c8d; border-bottom: none;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 5; /* In background */
-            pointer-events: auto; /* Required for collision detection */
+            z-index: 5; pointer-events: auto; 
         }
-        /* Battlement details */
         #castle::before {
             content: ''; position: absolute; top: -15px; left: -4px; width: calc(100% + 8px); height: 20px;
             background: repeating-linear-gradient(90deg, #7f8c8d, #7f8c8d 20px, transparent 20px, transparent 40px);
@@ -117,7 +114,7 @@
         
         .roof {
             position: absolute; top: -50px; left: -4px; width: calc(100% + 8px); height: 50px;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Triangle shape */
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%); 
         }
         .roof-blue { background-color: #3498db; }
         .roof-pink { background-color: #ff69b4; }
@@ -127,6 +124,31 @@
             animation: flag-wave 2s ease-in-out infinite alternate; transform-origin: left;
         }
         @keyframes flag-wave { 0% { transform: scaleX(1) rotate(5deg); } 100% { transform: scaleX(0.8) rotate(-5deg); } }
+
+        /* --- THE NEW WINDOWS --- */
+        .window {
+            position: absolute;
+            width: 34px; height: 50px;
+            background-color: #f39c12; /* Warm glow */
+            border: 4px solid #2c3e50;
+            border-radius: 20px 20px 0 0;
+            box-shadow: inset 0px 5px 10px rgba(0,0,0,0.5);
+            z-index: 1; /* Make sure they sit on the castle wall */
+        }
+        /* Window Crossbars */
+        .window::after {
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background-color: #2c3e50;
+        }
+        .window::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background-color: #2c3e50;
+        }
+        
+        /* Positioning the windows */
+        .tower .window { bottom: 80px; left: 50%; transform: translateX(-50%); }
+        .tower-mid .window { bottom: 120px; left: 50%; transform: translateX(-50%); }
+        .main-win { bottom: 60px; }
+        .main-win.left-side { left: 100px; }
+        .main-win.right-side { right: 100px; }
 
         /* The Door */
         #castle-door {
@@ -144,10 +166,9 @@
         .unicorn-entity { z-index: 40; width: 100px; height: 120px; }
         .princess-entity { z-index: 45; width: 80px; height: 100px; transition: transform 0.2s, top 0.2s, left 0.2s; } 
 
-        /* Used when princess is 'in' the castle */
         .princess-scaled-down { 
-            transform: scale(0.4) !important; /* Shrink to fit in window */
-            z-index: 6 !important; /* Sit just in front of castle walls */
+            transform: scale(0.4) !important; 
+            z-index: 6 !important; /* Ensures she is perfectly visible in the window */
         }
 
         .flip-wrapper { transition: transform 0.2s; height: 100%; width: 100%; }
@@ -162,11 +183,11 @@
         .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
         @keyframes cartwheel { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.4) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
 
-        /* PRINCESS CONTENT */
+        /* PRINCESS SVG */
         .princess-content { width: 100%; height: 100%; display: flex; justify-content: center; }
         .princess-content svg { width: 100%; height: 100%; }
 
-        /* UNICORN CONTENT */
+        /* UNICORN CSS */
         .constructed-unicorn { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; }
         .u-head { font-size: 80px; margin-bottom: -15px; z-index: 6; }
         .u-body { width: 80px; height: 70px; background-color: white; border-radius: 50% 50% 20px 20px; border: 3px solid #eee; position: relative; box-shadow: 2px 4px 8px rgba(0,0,0,0.1); z-index: 5; }
@@ -205,10 +226,23 @@
     </div>
 
     <div id="castle">
-        <div class="tower tower-main left"><div class="roof roof-blue"></div></div>
-        <div class="tower tower-main right"><div class="roof roof-blue"></div></div>
-        <div class="tower tower-mid"><div class="roof roof-pink"></div><div class="flag">🚩</div></div>
+        <div class="tower tower-main left">
+            <div class="roof roof-blue"></div>
+            <div class="window castle-win"></div> 
+        </div>
+        <div class="tower tower-main right">
+            <div class="roof roof-blue"></div>
+            <div class="window castle-win"></div>
+        </div>
+        <div class="tower tower-mid">
+            <div class="roof roof-pink"></div>
+            <div class="flag">🚩</div>
+            <div class="window castle-win"></div>
+        </div>
         <div id="castle-door"></div>
+        
+        <div class="window castle-win main-win left-side"></div>
+        <div class="window castle-win main-win right-side"></div>
     </div>
 
     <div id="tea-message" onclick="closeMessage()">
@@ -287,7 +321,7 @@
     </div>
 
     <script>
-        // 1. SKY & RAIN LOGIC
+        // SKY & RAIN LOGIC
         let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50', '#778899', '#87CEEB']; 
         let sunIcons = ['☀️', '🌞', '🌙', '☁️', '☀️']; 
         let skyIndex = 0;
@@ -326,7 +360,7 @@
         function showTeaMessage() { document.getElementById('tea-message').style.display = 'block'; }
         function closeMessage() { document.getElementById('tea-message').style.display = 'none'; }
 
-        // --- GAME ENGINE ---
+        // GAME ENGINE
         let ents = [
             { id: 'u1', type: 'unicorn', el: document.getElementById('u1'), vx: 1.5, walking: false, flipped: false, grassY: 0, atCastle: false },
             { id: 'u2', type: 'unicorn', el: document.getElementById('u2'), vx: -1.5, walking: false, flipped: true, grassY: 0, atCastle: false },
@@ -340,13 +374,12 @@
 
         function updateLoop() {
             ents.forEach(ent => {
-                if (activeRider === ent.el || ent.atCastle) return; // Skip updating dragged or castle entities
+                if (activeRider === ent.el || ent.atCastle) return; 
 
                 if (ent.type === 'princess' && ent.riding) {
                     let u = ents.find(e => e.id === ent.riding);
                     if (u && activeRider !== ent.el) {
-                        if (u.atCastle) return; // Unicorn is at castle, don't update princess position via riding logic
-                        
+                        if (u.atCastle) return; 
                         let uRect = u.el.getBoundingClientRect();
                         ent.el.style.left = (uRect.left + 10) + 'px';
                         ent.el.style.top = (uRect.top - 50) + 'px';
@@ -372,7 +405,7 @@
         }
         requestAnimationFrame(updateLoop);
 
-        // --- DRAG LOGIC ---
+        // DRAG LOGIC
         const draggableItems = document.querySelectorAll('.draggable');
         draggableItems.forEach(item => {
             item.addEventListener('mousedown', dragStart);
@@ -387,10 +420,8 @@
             let ent = ents.find(e => e.el === activeRider);
             
             if (ent) {
-                if (ent.type === 'princess' && ent.riding) ent.riding = null; // Dismount
-                
+                if (ent.type === 'princess' && ent.riding) ent.riding = null; 
                 if (ent.atCastle) {
-                    // ACTION: Pulling princess out of castle
                     ent.atCastle = false;
                     ent.el.classList.remove('princess-scaled-down');
                 }
@@ -420,36 +451,34 @@
             if (ent) {
                 let rect = ent.el.getBoundingClientRect();
                 
-                // --- NEW: CASTLE LOGIC ---
-                // Check if dropped ON the castle wall area
                 let isOnCastle = (rect.left + rect.width/2 > cRect.left && 
                                   rect.left + rect.width/2 < cRect.right &&
                                   rect.top + rect.height/2 > cRect.top &&
                                   rect.top + rect.height/2 < cRect.bottom);
 
                 if (ent.type === 'princess' && isOnCastle && isDragging) {
-                    // ACTION: Princess enters castle
                     ent.atCastle = true;
                     ent.walking = false;
                     ent.riding = null;
                     
-                    // Position her in a random window slot
-                    let windowX = cRect.left + 50 + (Math.random() * (cRect.width - 150));
-                    let windowY = cRect.top + 70 + (Math.random() * 100);
-
-                    ent.el.style.left = windowX + 'px';
-                    ent.el.style.top = windowY + 'px';
-                    ent.el.classList.add('princess-scaled-down'); // Shrink her
-                    ent.el.querySelector('.flip-wrapper').style.transform = 'scaleX(1)'; // Face forward
+                    // --- NEW: Snap princess specifically to a random window ---
+                    let windows = document.querySelectorAll('.castle-win');
+                    let randomWindow = windows[Math.floor(Math.random() * windows.length)];
+                    let wRect = randomWindow.getBoundingClientRect();
+                    
+                    // Match her center with the window's center (Width=80px, Height=100px so center offsets are 40 and 50)
+                    ent.el.style.left = (wRect.left + (wRect.width / 2) - 40) + 'px';
+                    ent.el.style.top = (wRect.top + (wRect.height / 2) - 50) + 'px'; 
+                    
+                    ent.el.classList.add('princess-scaled-down'); 
+                    ent.el.querySelector('.flip-wrapper').style.transform = 'scaleX(1)'; 
                     activeRider = null;
-                    return; // Stop further processing
+                    return; 
                 }
 
-                // --- EXISTING LOGIC ---
                 let isGrass = rect.bottom > window.innerHeight - 200; 
 
                 if (!isDragging) {
-                    // ACTION: Click
                     let animTarget = ent.el.querySelector('.spin-magic-target');
                     animTarget.classList.add('spin-magic');
                     setTimeout(() => animTarget.classList.remove('spin-magic'), 800);
@@ -462,10 +491,9 @@
                     }
                     if (ent.walking) ent.el.querySelector('.anim-wrapper').classList.add('walking-bounce'); else ent.el.querySelector('.anim-wrapper').classList.add('prancing');
                 } else {
-                    // ACTION: Drag & Drop
                     let mounted = false;
                     if (ent.type === 'princess') {
-                        let unicorns = ents.filter(x => x.type === 'unicorn' && !x.atCastle); // Can't mount unicorn in castle
+                        let unicorns = ents.filter(x => x.type === 'unicorn' && !x.atCastle); 
                         for (let u of unicorns) {
                             let uRect = u.el.getBoundingClientRect();
                             let dx = (rect.left + rect.width/2) - (uRect.left + uRect.width/2);
