@@ -112,6 +112,19 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* The Poop Animation */
+        .poop {
+            position: absolute;
+            font-size: 40px;
+            z-index: 15;
+            animation: plop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            pointer-events: none; /* Makes sure it doesn't block you from clicking the unicorn again */
+        }
+        @keyframes plop {
+            0% { transform: scale(0) translateY(-30px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
         /* Pop-up Message Box */
         #tea-message {
             display: none;
@@ -154,20 +167,20 @@
 
     <div class="grass">
         <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
-        <div class="scene-item unicorn" onclick="doMagicSpin(this)">🦄</div>
+        <div class="scene-item unicorn" onclick="unicornSurprise(this)">🦄</div>
         <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
         
         <div class="scene-item tea-party" onclick="showTeaMessage()" title="Click us!">👸☕🧁👸</div>
         
         <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
-        <div class="scene-item unicorn" onclick="doMagicSpin(this)">🦄</div>
+        <div class="scene-item unicorn" onclick="unicornSurprise(this)">🦄</div>
         <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
     </div>
 
     <script>
         // 1. Change the sky color when the sun is clicked
-        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50']; // Blue, Pink (Sunset), Dark Blue (Night)
-        let sunIcons = ['☀️', '🌞', '🌙']; // Sun, Sunset Sun, Moon
+        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50']; 
+        let sunIcons = ['☀️', '🌞', '🌙']; 
         let skyIndex = 0;
 
         function changeSky() {
@@ -181,15 +194,39 @@
             element.classList.add('grow');
             setTimeout(() => {
                 element.classList.remove('grow');
-            }, 800); // Shrinks back after 0.8 seconds
+            }, 800); 
         }
 
-        // 3. Make unicorns do a magic flip when clicked
-        function doMagicSpin(element) {
+        // 3. Make unicorns spin AND poop!
+        function unicornSurprise(element) {
+            // Do the magic flip
             element.classList.add('spin-magic');
             setTimeout(() => {
                 element.classList.remove('spin-magic');
-            }, 1000); // Resets after 1 second
+            }, 1000); 
+
+            // Create the poop element
+            let poop = document.createElement('div');
+            poop.innerText = '💩'; 
+            poop.className = 'poop';
+            
+            // Figure out where the unicorn is sitting so we can drop it in the right spot
+            let rect = element.getBoundingClientRect();
+            
+            // Adjust the coordinates to place it right behind the unicorn
+            poop.style.left = (rect.left - 5) + 'px'; 
+            poop.style.top = (rect.bottom - 45) + 'px'; 
+            
+            // Add it to the page
+            document.body.appendChild(poop);
+
+            // Make it fade away after 3 seconds so the screen doesn't fill up
+            setTimeout(() => {
+                poop.style.transition = "opacity 1s ease-out";
+                poop.style.opacity = "0";
+                // Remove it entirely once it is invisible
+                setTimeout(() => poop.remove(), 1000);
+            }, 3000);
         }
 
         // 4. Show and hide the tea party message
