@@ -88,7 +88,8 @@
 
         /* --- THE BEAUTIFUL CASTLE --- */
         #castle {
-            position: fixed; bottom: 15vh; 
+            position: fixed; 
+            bottom: 22vh; /* Lifted higher above the grass! */
             left: 50%; transform: translateX(-50%);
             width: 500px; height: 350px;
             background: linear-gradient(135deg, #bdc3c7, #95a5a6); 
@@ -125,32 +126,23 @@
         }
         @keyframes flag-wave { 0% { transform: scaleX(1) rotate(5deg); } 100% { transform: scaleX(0.8) rotate(-5deg); } }
 
-        /* --- THE NEW WINDOWS --- */
         .window {
             position: absolute;
             width: 34px; height: 50px;
-            background-color: #f39c12; /* Warm glow */
-            border: 4px solid #2c3e50;
+            background-color: #f39c12; border: 4px solid #2c3e50;
             border-radius: 20px 20px 0 0;
             box-shadow: inset 0px 5px 10px rgba(0,0,0,0.5);
-            z-index: 1; /* Make sure they sit on the castle wall */
+            z-index: 1; 
         }
-        /* Window Crossbars */
-        .window::after {
-            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background-color: #2c3e50;
-        }
-        .window::before {
-            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background-color: #2c3e50;
-        }
+        .window::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background-color: #2c3e50; }
+        .window::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background-color: #2c3e50; }
         
-        /* Positioning the windows */
         .tower .window { bottom: 80px; left: 50%; transform: translateX(-50%); }
         .tower-mid .window { bottom: 120px; left: 50%; transform: translateX(-50%); }
         .main-win { bottom: 60px; }
         .main-win.left-side { left: 100px; }
         .main-win.right-side { right: 100px; }
 
-        /* The Door */
         #castle-door {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 80px; height: 100px; background-color: #8e44ad;
@@ -161,15 +153,17 @@
         .draggable {
             position: fixed; cursor: grab; user-select: none; touch-action: none;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+            background-color: rgba(255,255,255,0.001); /* Invisible solid background to catch all clicks */
         }
         .draggable:active { cursor: grabbing; }
-        .unicorn-entity { z-index: 40; width: 100px; height: 120px; }
-        .princess-entity { z-index: 45; width: 80px; height: 100px; transition: transform 0.2s, top 0.2s, left 0.2s; } 
-
-        .princess-scaled-down { 
-            transform: scale(0.4) !important; 
-            z-index: 6 !important; /* Ensures she is perfectly visible in the window */
+        
+        /* Enlarged invisible hit box to make dragging super easy for kids */
+        .draggable::after {
+            content: ''; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
         }
+
+        .unicorn-entity { z-index: 40; width: 100px; height: 120px; }
+        .princess-entity { z-index: 45; width: 80px; height: 100px; } 
 
         .flip-wrapper { transition: transform 0.2s; height: 100%; width: 100%; }
         .anim-wrapper { transition: transform 0.2s; height: 100%; width: 100%; }
@@ -184,8 +178,11 @@
         @keyframes cartwheel { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.4) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
 
         /* PRINCESS SVG */
-        .princess-content { width: 100%; height: 100%; display: flex; justify-content: center; }
+        .princess-content { width: 100%; height: 100%; display: flex; justify-content: center; transition: transform 0.3s; }
         .princess-content svg { width: 100%; height: 100%; }
+        
+        /* ONLY shrinks the visual art, not the invisible drag box! */
+        .princess-scaled-down { transform: scale(0.45) !important; }
 
         /* UNICORN CSS */
         .constructed-unicorn { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; }
@@ -416,6 +413,10 @@
 
         function dragStart(e) {
             activeRider = this; isDragging = false; 
+            
+            // Pop to the very front so they don't drag behind other characters!
+            activeRider.style.zIndex = 100;
+            
             let rect = activeRider.getBoundingClientRect();
             let ent = ents.find(e => e.el === activeRider);
             
@@ -423,7 +424,8 @@
                 if (ent.type === 'princess' && ent.riding) ent.riding = null; 
                 if (ent.atCastle) {
                     ent.atCastle = false;
-                    ent.el.classList.remove('princess-scaled-down');
+                    // Un-shrink the visual art when she leaves the castle
+                    ent.el.querySelector('.princess-content').classList.remove('princess-scaled-down');
                 }
             }
 
@@ -449,6 +451,9 @@
             let ent = ents.find(e => e.el === activeRider);
 
             if (ent) {
+                // Reset the z-index safely back to normal
+                activeRider.style.zIndex = ent.type === 'unicorn' ? 40 : 45;
+                
                 let rect = ent.el.getBoundingClientRect();
                 
                 let isOnCastle = (rect.left + rect.width/2 > cRect.left && 
@@ -461,16 +466,16 @@
                     ent.walking = false;
                     ent.riding = null;
                     
-                    // --- NEW: Snap princess specifically to a random window ---
                     let windows = document.querySelectorAll('.castle-win');
                     let randomWindow = windows[Math.floor(Math.random() * windows.length)];
                     let wRect = randomWindow.getBoundingClientRect();
                     
-                    // Match her center with the window's center (Width=80px, Height=100px so center offsets are 40 and 50)
+                    // Center the big invisible box perfectly over the window
                     ent.el.style.left = (wRect.left + (wRect.width / 2) - 40) + 'px';
                     ent.el.style.top = (wRect.top + (wRect.height / 2) - 50) + 'px'; 
                     
-                    ent.el.classList.add('princess-scaled-down'); 
+                    // ONLY shrink the inner drawing, leaving the big invisible box for easy grabbing
+                    ent.el.querySelector('.princess-content').classList.add('princess-scaled-down'); 
                     ent.el.querySelector('.flip-wrapper').style.transform = 'scaleX(1)'; 
                     activeRider = null;
                     return; 
