@@ -112,17 +112,31 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* The Poop Animation */
+        /* --- THE FIXES ARE HERE --- */
+        
+        /* 1. The Poop Animation (Moved above the grass!) */
         .poop {
-            position: absolute;
-            font-size: 40px;
-            z-index: 15;
+            position: fixed; /* Keeps it exactly where you click regardless of scrolling */
+            font-size: 50px;
+            z-index: 30; /* 30 is higher than the grass's 20, so it sits in front! */
             animation: plop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            pointer-events: none; /* Makes sure it doesn't block you from clicking the unicorn again */
+            pointer-events: none; 
         }
         @keyframes plop {
             0% { transform: scale(0) translateY(-30px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* 2. The Unicorn Cartwheel (Now using a proper keyframe animation) */
+        .grow { transform: scale(1.6) translateY(-20px) !important; }
+        
+        .spin-magic { 
+            animation: cartwheel 0.8s ease-in-out !important; 
+        }
+        @keyframes cartwheel {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.4) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
         }
 
         /* Pop-up Message Box */
@@ -132,7 +146,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #FFF0F5; /* Lavender blush */
+            background-color: #FFF0F5;
             border: 5px solid #FF69B4;
             border-radius: 30px;
             padding: 30px;
@@ -142,10 +156,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             cursor: pointer;
         }
-
-        /* Classes added by JavaScript for click actions */
-        .grow { transform: scale(1.6) translateY(-20px) !important; }
-        .spin-magic { transform: rotateY(360deg) scale(1.2) !important; transition: transform 0.8s ease-in-out !important; }
     </style>
 </head>
 <body id="sky">
@@ -178,7 +188,6 @@
     </div>
 
     <script>
-        // 1. Change the sky color when the sun is clicked
         let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50']; 
         let sunIcons = ['☀️', '🌞', '🌙']; 
         let skyIndex = 0;
@@ -189,7 +198,6 @@
             document.querySelector('.sun').innerText = sunIcons[skyIndex];
         }
 
-        // 2. Make flowers grow temporarily when clicked
         function makeGrow(element) {
             element.classList.add('grow');
             setTimeout(() => {
@@ -197,39 +205,36 @@
             }, 800); 
         }
 
-        // 3. Make unicorns spin AND poop!
         function unicornSurprise(element) {
-            // Do the magic flip
+            // Do the magic cartwheel
             element.classList.add('spin-magic');
             setTimeout(() => {
                 element.classList.remove('spin-magic');
-            }, 1000); 
+            }, 800); 
 
             // Create the poop element
             let poop = document.createElement('div');
             poop.innerText = '💩'; 
             poop.className = 'poop';
             
-            // Figure out where the unicorn is sitting so we can drop it in the right spot
+            // Figure out exactly where the unicorn is on the screen
             let rect = element.getBoundingClientRect();
             
-            // Adjust the coordinates to place it right behind the unicorn
-            poop.style.left = (rect.left - 5) + 'px'; 
-            poop.style.top = (rect.bottom - 45) + 'px'; 
+            // Drop it right near the unicorn's back legs
+            poop.style.left = (rect.left - 10) + 'px'; 
+            poop.style.top = (rect.top + 20) + 'px'; 
             
             // Add it to the page
             document.body.appendChild(poop);
 
-            // Make it fade away after 3 seconds so the screen doesn't fill up
+            // Make it fade away after 3 seconds
             setTimeout(() => {
                 poop.style.transition = "opacity 1s ease-out";
                 poop.style.opacity = "0";
-                // Remove it entirely once it is invisible
                 setTimeout(() => poop.remove(), 1000);
             }, 3000);
         }
 
-        // 4. Show and hide the tea party message
         function showTeaMessage() {
             document.getElementById('tea-message').style.display = 'block';
         }
