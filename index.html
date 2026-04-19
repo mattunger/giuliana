@@ -1,1 +1,206 @@
-hello world, this is gigi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giuliana's Garden Tea Party</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #87CEEB; /* A lovely sky blue */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            text-align: center;
+            color: #333;
+            overflow-x: hidden;
+            transition: background-color 1.5s ease; /* Smooth fade for sky changes */
+        }
+        
+        /* The Sun */
+        .sun {
+            font-size: 100px;
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            animation: spin 20s linear infinite;
+            cursor: pointer;
+            user-select: none;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Flying Butterflies */
+        .butterfly {
+            position: absolute;
+            font-size: 40px;
+            top: 150px;
+            left: -50px;
+            animation: fly 18s linear infinite;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .butterfly2 {
+            top: 250px;
+            animation: fly 25s linear infinite 5s; /* Starts a bit later */
+        }
+        @keyframes fly {
+            0% { left: -10%; transform: translateY(0px); }
+            25% { transform: translateY(-30px); }
+            50% { transform: translateY(20px); }
+            75% { transform: translateY(-20px); }
+            100% { left: 110%; transform: translateY(0px); }
+        }
+
+        /* Header Text Box */
+        .header-text {
+            margin-top: 80px;
+            background-color: rgba(255, 255, 255, 0.85);
+            display: inline-block;
+            padding: 30px 50px;
+            border-radius: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px dashed #FF69B4;
+            position: relative;
+            z-index: 5;
+        }
+        h1 { margin: 0; font-size: 3rem; color: #FF1493; }
+        p { font-size: 1.8rem; margin: 15px 0 0 0; color: #555; }
+
+        /* The Grass */
+        .grass {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            min-height: 25vh;
+            background-color: #7CFC00;
+            border-top: 10px solid #32CD32;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            z-index: 20;
+        }
+
+        /* All Scene Items */
+        .scene-item {
+            font-size: 70px;
+            margin: 0 10px;
+            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2));
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.4s ease; /* For clicking effects */
+        }
+
+        /* Special Animations */
+        .unicorn {
+            animation: prance 3s ease-in-out infinite;
+        }
+        @keyframes prance {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px) rotate(-5deg); }
+        }
+
+        .tea-party {
+            font-size: 100px;
+            margin: 0 20px;
+            animation: bounce 4s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Pop-up Message Box */
+        #tea-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFF0F5; /* Lavender blush */
+            border: 5px solid #FF69B4;
+            border-radius: 30px;
+            padding: 30px;
+            font-size: 2.5rem;
+            color: #FF1493;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        /* Classes added by JavaScript for click actions */
+        .grow { transform: scale(1.6) translateY(-20px) !important; }
+        .spin-magic { transform: rotateY(360deg) scale(1.2) !important; transition: transform 0.8s ease-in-out !important; }
+    </style>
+</head>
+<body id="sky">
+
+    <div class="sun" onclick="changeSky()" title="Click to change the sky!">☀️</div>
+
+    <div class="butterfly" onclick="this.style.display='none'">🦋</div>
+    <div class="butterfly butterfly2" onclick="this.style.display='none'">🦋</div>
+
+    <div class="header-text">
+        <h1>Hello world, this is Giuliana.</h1>
+        <p>Welcome to my garden tea party! 🫖✨</p>
+    </div>
+
+    <div id="tea-message" onclick="closeMessage()">
+        "Would you like a cup of tea and a cupcake?" 🧁☕<br>
+        <span style="font-size: 1.5rem; color: #555;">(Click to close)</span>
+    </div>
+
+    <div class="grass">
+        <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
+        <div class="scene-item unicorn" onclick="doMagicSpin(this)">🦄</div>
+        <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
+        
+        <div class="scene-item tea-party" onclick="showTeaMessage()" title="Click us!">👸☕🧁👸</div>
+        
+        <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
+        <div class="scene-item unicorn" onclick="doMagicSpin(this)">🦄</div>
+        <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
+    </div>
+
+    <script>
+        // 1. Change the sky color when the sun is clicked
+        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50']; // Blue, Pink (Sunset), Dark Blue (Night)
+        let sunIcons = ['☀️', '🌞', '🌙']; // Sun, Sunset Sun, Moon
+        let skyIndex = 0;
+
+        function changeSky() {
+            skyIndex = (skyIndex + 1) % skyColors.length;
+            document.getElementById('sky').style.backgroundColor = skyColors[skyIndex];
+            document.querySelector('.sun').innerText = sunIcons[skyIndex];
+        }
+
+        // 2. Make flowers grow temporarily when clicked
+        function makeGrow(element) {
+            element.classList.add('grow');
+            setTimeout(() => {
+                element.classList.remove('grow');
+            }, 800); // Shrinks back after 0.8 seconds
+        }
+
+        // 3. Make unicorns do a magic flip when clicked
+        function doMagicSpin(element) {
+            element.classList.add('spin-magic');
+            setTimeout(() => {
+                element.classList.remove('spin-magic');
+            }, 1000); // Resets after 1 second
+        }
+
+        // 4. Show and hide the tea party message
+        function showTeaMessage() {
+            document.getElementById('tea-message').style.display = 'block';
+        }
+        
+        function closeMessage() {
+            document.getElementById('tea-message').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
