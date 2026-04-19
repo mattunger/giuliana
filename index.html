@@ -6,59 +6,37 @@
     <title>Giuliana's Garden Tea Party</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #87CEEB; /* Sky blue */
+            margin: 0; padding: 0; background-color: #87CEEB; /* Sky blue */
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            text-align: center;
-            color: #333;
-            overflow: hidden; /* Prevents the page from scrolling while dragging */
+            text-align: center; color: #333;
+            overflow: hidden; /* Prevents screen scrolling while dragging */
             transition: background-color 1.5s ease; 
         }
         
-        /* The Sun / Moon / Storm Cloud */
+        /* Sun / Moon / Storm Cloud */
         .sun {
-            font-size: 100px;
-            position: fixed; 
-            top: 20px;
-            right: 40px;
-            animation: spin 20s linear infinite;
-            cursor: pointer;
-            user-select: none;
-            z-index: 50; 
+            font-size: 100px; position: fixed; top: 20px; right: 40px;
+            animation: spin 20s linear infinite; cursor: pointer; user-select: none; z-index: 50; 
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Rainbow Layer */
         #rainbow-layer {
-            display: none; 
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 700px;
-            height: 350px;
-            border-radius: 350px 350px 0 0;
+            display: none; position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+            width: 700px; height: 350px; border-radius: 350px 350px 0 0;
             background: radial-gradient(circle at center 100%,
                 transparent 50%, violet 50%, violet 55%, indigo 55%, indigo 60%,
                 blue 60%, blue 65%, green 65%, green 70%, yellow 70%, yellow 75%,
                 orange 75%, orange 80%, red 80%, red 85%, transparent 85%
             );
-            filter: blur(5px);
-            opacity: 0.7;
-            z-index: 2; 
+            filter: blur(5px); opacity: 0.7; z-index: 2; 
         }
 
-        /* Flying Butterflies */
+        /* Butterflies */
         .butterfly-container { transition: opacity 1s ease; }
         .butterfly {
-            position: fixed;
-            font-size: 40px;
-            top: 150px;
-            left: -50px;
-            animation: fly 18s linear infinite;
-            cursor: pointer;
-            z-index: 10;
+            position: fixed; font-size: 40px; top: 150px; left: -50px;
+            animation: fly 18s linear infinite; cursor: pointer; z-index: 10;
         }
         .butterfly2 { top: 250px; animation: fly 25s linear infinite 5s; }
         @keyframes fly {
@@ -71,99 +49,47 @@
 
         /* Rain Layer */
         #rain-layer {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; 
-            z-index: 15; 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 15; 
         }
         .rain-drop {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.7);
+            position: absolute; background-color: rgba(255, 255, 255, 0.7);
             width: 2px; height: 15px; top: -20px;
-            animation: fall 1s linear infinite;
-            border-radius: 2px;
+            animation: fall 1s linear infinite; border-radius: 2px;
         }
         @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* Header Text Box (Now clickable to hide!) */
+        /* Header Text (Click to hide) */
         .header-text {
-            margin-top: 80px;
-            background-color: rgba(255, 255, 255, 0.85);
-            display: inline-block;
-            padding: 30px 50px;
-            border-radius: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 3px dashed #FF69B4;
-            position: relative;
-            z-index: 5; 
-            cursor: pointer;
-            transition: transform 1s ease, opacity 1s ease; /* Smooth hide animation */
+            margin-top: 80px; background-color: rgba(255, 255, 255, 0.85);
+            display: inline-block; padding: 30px 50px; border-radius: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 3px dashed #FF69B4;
+            position: relative; z-index: 5; 
+            cursor: pointer; transition: transform 1s ease, opacity 1s ease;
         }
         h1 { margin: 0; font-size: 3rem; color: #FF1493; }
         p { font-size: 1.8rem; margin: 15px 0 0 0; color: #555; }
 
         /* The Grass */
         .grass {
-            position: fixed;
-            bottom: 0; width: 100%; min-height: 25vh;
-            background-color: #7CFC00;
-            border-top: 10px solid #32CD32;
+            position: fixed; bottom: 0; width: 100%; min-height: 25vh;
+            background-color: #7CFC00; border-top: 10px solid #32CD32;
             display: flex; align-items: flex-end; justify-content: space-evenly;
             padding-bottom: 20px; z-index: 20;
         }
 
         /* Scene Items (Flowers/Tea set) */
         .scene-item {
-            font-size: 70px;
-            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2));
-            cursor: pointer; user-select: none;
-            transition: transform 1s ease; /* Allows for smooth growing */
+            font-size: 70px; filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2));
+            cursor: pointer; user-select: none; transition: transform 1s ease; 
         }
-        
         .tea-party { font-size: 80px; animation: bounce 4s ease-in-out infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* --- DRAGGABLE PRINCESS RIDERS --- */
-        .draggable-rider {
-            position: fixed;
-            cursor: grab;
-            z-index: 40;
-            user-select: none;
-            touch-action: none; /* Prevents screen scrolling while dragging on tablets */
-            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));
-        }
-        .draggable-rider:active { cursor: grabbing; }
-        .prancing { animation: prance 3s ease-in-out infinite; }
-        @keyframes prance {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px) rotate(-5deg); }
-        }
-
-        .rider-unicorn { font-size: 90px; }
+        /* Temporary click grow and Permanent rain grow effects */
+        .grown-flower { transform: scale(1.6) !important; } 
+        .grow { transform: scale(2.2) translateY(-20px) !important; } 
         
-        .rider-princess {
-            position: absolute;
-            top: -30px; /* Sits her on the unicorn's back */
-            left: 20px;
-            transform: scale(0.65);
-            display: flex; flex-direction: column; align-items: center;
-            pointer-events: none; /* Makes sure dragging the princess grabs the whole unit */
-        }
-        .p-head { font-size: 60px; margin-bottom: -15px; }
-        .p-body {
-            width: 60px; height: 60px;
-            border-radius: 50% 50% 10px 10px;
-            border: 3px solid white; box-shadow: 2px 4px 5px rgba(0,0,0,0.2);
-            position: relative; background-color: hotpink;
-        }
-        .p-body::after {
-            content: ''; position: absolute;
-            bottom: -8px; left: 10px; width: 40px; height: 10px;
-            background-color: #f1c40f; border-radius: 5px;
-        }
-        .p2-color .p-body { background-color: mediumpurple; }
-
         /* Poop Animation */
         .poop {
             position: fixed; font-size: 50px; z-index: 30; 
@@ -171,15 +97,129 @@
         }
         @keyframes plop { 0% { transform: scale(0) translateY(-30px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
-        /* Flower Grow Effects */
-        .grown-flower { transform: scale(1.6) !important; } /* Permanent grow after rain */
-        .grow { transform: scale(2.2) translateY(-20px) !important; } /* Temporary click grow */
+        /* --- THE MAGIC DRAGGABLE UNICORN RIDERS (Updated with full bodies!) --- */
+        .draggable-rider {
+            position: fixed; cursor: grab; z-index: 40; user-select: none; touch-action: none;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+        }
+        .draggable-rider:active { cursor: grabbing; }
         
-        /* Unicorn Cartwheel */
-        .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
-        @keyframes cartwheel { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.4) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
+        /* Gentle Prancing Animation */
+        .prancing { animation: prance 3s ease-in-out infinite; }
+        @keyframes prance {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px) rotate(-3deg); }
+        }
 
-        /* Pop-up Message Box */
+        /* The Princess Rider (sitting on the constructed body) */
+        .rider-princess {
+            position: absolute; top: -10px; left: 15px; transform: scale(0.65);
+            display: flex; flex-direction: column; align-items: center;
+            pointer-events: none; /* Dragging grabs the whole unit */
+        }
+        .p-head { font-size: 60px; margin-bottom: -15px; }
+        .p-body {
+            width: 60px; height: 60px; border-radius: 50% 50% 10px 10px;
+            border: 3px solid white; box-shadow: 2px 4px 5px rgba(0,0,0,0.2);
+            position: relative; background-color: hotpink;
+        }
+        .p-body::after {
+            content: ''; position: absolute; bottom: -8px; left: 10px; width: 40px; height: 10px;
+            background-color: #f1c40f; border-radius: 5px; /* Golden shoes */
+        }
+        .p2-color .p-body { background-color: mediumpurple; }
+
+        /* --- THE CONSTRUCTED FULL-BODY UNICORN STYLING --- */
+        .constructed-unicorn {
+            position: relative;
+            display: flex; flex-direction: column; align-items: center;
+            width: 100px; height: 120px; /* Base container size */
+            transition: transform 0.8s ease-in-out; /* For the cartwheel */
+            pointer-events: none; /* Make sure dragging targets the outer rider */
+        }
+
+        /* Head (The Emoji) */
+        .u-head { font-size: 80px; margin-bottom: -15px; z-index: 5; }
+        
+        /* Body (Built with CSS) */
+        .u-body {
+            width: 80px; height: 70px; background-color: white;
+            border-radius: 50% 50% 20px 20px; /* Simple oval/body shape */
+            border: 3px solid #eee; position: relative;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Tail and Mane details (pure CSS shadows/ovals) */
+        .u-body::before { /* Tail */
+            content: ''; position: absolute; bottom: 10px; right: -25px;
+            width: 30px; height: 40px; border-radius: 50% 50% 0 0;
+            background: linear-gradient(#FF69B4, #9370DB); /* Pink to purple tail */
+            border: 2px solid white; transform: rotate(15deg);
+        }
+        .u-body::after { /* Mane */
+            content: ''; position: absolute; top: -5px; left: 10px;
+            width: 50px; height: 15px; border-radius: 10px;
+            background: linear-gradient(#FFD700, #FF69B4, #9370DB); /* Colorful mane */
+            border: 1px solid white;
+        }
+
+        /* Legs (Pseudo-elements from the main body element) */
+        .u-leg-pair {
+            position: absolute; width: 60px; bottom: -20px; left: 10px;
+            display: flex; justify-content: space-between;
+        }
+        .u-leg {
+            width: 15px; height: 25px; background-color: white;
+            border: 2px solid #eee; border-radius: 5px; position: relative;
+        }
+        .u-leg::after { /* Shoes */
+            content: ''; position: absolute; bottom: -4px; left: -1px;
+            width: 17px; height: 6px; background-color: gold; border-radius: 3px;
+        }
+        
+        /* Wings! (Positioned on the side of the body) */
+        .u-wing {
+            position: absolute; top: -10px;
+            width: 50px; height: 50px; background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50% 10px 50% 50%; /* Feathery shape */
+            border: 3px solid white; z-index: 4;
+            display: flex; justify-content: space-between; align-items: flex-end; padding: 2px;
+            animation: flutter 2s ease-in-out infinite;
+        }
+        /* Wing feathery bits hint */
+        .u-wing::after {
+            content: ''; position: absolute; top: 10px; left: 10px; width: 25px; height: 25px;
+            border-radius: 50%; border: 2px dashed #9370DB; /* Purple highlights */
+        }
+
+        .u-wing-right { right: -20px; top: 10px; }
+        .u-wing-left { left: -20px; top: 10px; transform: scaleX(-1); }
+
+        /* Wing flutter animation */
+        @keyframes flutter {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(-5px) scaleY(1.05); }
+        }
+        
+        /* Apply flutter separately for the left wing to handle flipping */
+        .u-wing-left { animation-name: flutter-left; }
+        @keyframes flutter-left {
+            0%, 100% { transform: scaleX(-1) translateY(0) scaleY(1); }
+            50% { transform: scaleX(-1) translateY(-5px) scaleY(1.05); }
+        }
+
+        /* Flips the entire constructed unit for the second rider */
+        .flip-unicorn { transform: scaleX(-1) !important; }
+
+        /* The Spin/Cartwheel Animation (Applied to the constructed-unicorn element) */
+        .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
+        @keyframes cartwheel {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.4) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        /* Tea Party Message Box */
         #tea-message {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background-color: #FFF0F5; border: 5px solid #FF69B4; border-radius: 30px;
@@ -223,14 +263,32 @@
         <div class="rider-princess">
             <div class="p-head">👸</div><div class="p-body"></div>
         </div>
-        <div class="rider-unicorn">🦄</div>
+        <div class="constructed-unicorn">
+            <div class="u-head">🦄</div>
+            <div class="u-wing u-wing-right"></div>
+            <div class="u-wing u-wing-left"></div>
+            <div class="u-body">
+                <div class="u-leg-pair">
+                    <div class="u-leg"></div><div class="u-leg"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="draggable-rider prancing" style="right: 15%; bottom: 30px;">
         <div class="rider-princess p2-color">
             <div class="p-head">👸</div><div class="p-body"></div>
         </div>
-        <div class="rider-unicorn" style="transform: scaleX(-1);">🦄</div>
+        <div class="constructed-unicorn flip-unicorn">
+            <div class="u-head">🦄</div>
+            <div class="u-wing u-wing-right"></div>
+            <div class="u-wing u-wing-left"></div>
+            <div class="u-body">
+                <div class="u-leg-pair">
+                    <div class="u-leg"></div><div class="u-leg"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -254,7 +312,7 @@
             butterflies.style.opacity = '1'; 
 
             if (skyIndex === 0) {
-                // Reset flowers when it is a new sunny day
+                // Reset flowers when it's a new sunny day
                 flowers.forEach(f => f.classList.remove('grown-flower'));
             } else if (skyIndex === 3) {
                 // Rain!
@@ -287,17 +345,22 @@
             setTimeout(() => { element.classList.remove('grow'); }, 800); 
         }
 
-        function unicornSurprise(element) {
-            element.classList.add('spin-magic');
-            setTimeout(() => { element.classList.remove('spin-magic'); }, 800); 
+        // Updated unicornSurprise function: finds the constructed-unicorn and targets it for spin/poop
+        function unicornSurprise(activeRider) {
+            const unicorn = activeRider.querySelector('.constructed-unicorn');
+            unicorn.classList.add('spin-magic');
+            setTimeout(() => { unicorn.classList.remove('spin-magic'); }, 800); 
 
             let poop = document.createElement('div');
             poop.innerText = '💩'; 
             poop.className = 'poop';
             
-            let rect = element.getBoundingClientRect();
-            poop.style.left = (rect.left + 40) + 'px'; 
-            poop.style.top = (rect.top + 50) + 'px'; 
+            // Get position relative to the main body element
+            let bodyRect = activeRider.querySelector('.u-body').getBoundingClientRect();
+            
+            // Poop placement logic for the full-body unicorn
+            poop.style.left = (bodyRect.right - 10) + 'px'; // Drop it near the back
+            poop.style.top = (bodyRect.bottom - 10) + 'px'; 
             document.body.appendChild(poop);
 
             setTimeout(() => {
@@ -310,7 +373,7 @@
         function showTeaMessage() { document.getElementById('tea-message').style.display = 'block'; }
         function closeMessage() { document.getElementById('tea-message').style.display = 'none'; }
 
-        // 3. DRAG TO FLY LOGIC (Works on Mouse and Touch/Tablets!)
+        // 3. DRAG TO FLY LOGIC (Works on Mouse and Touch!)
         const riders = document.querySelectorAll('.draggable-rider');
         let activeRider = null;
         let isDragging = false;
@@ -329,9 +392,7 @@
         function dragStart(e) {
             activeRider = this;
             isDragging = false; 
-            
             let rect = activeRider.getBoundingClientRect();
-            
             if (e.type === 'touchstart') {
                 offsetX = e.touches[0].clientX - rect.left;
                 offsetY = e.touches[0].clientY - rect.top;
@@ -339,19 +400,15 @@
                 offsetX = e.clientX - rect.left;
                 offsetY = e.clientY - rect.top;
             }
-            
-            // Stop prancing while dragging so it doesn't shake
             activeRider.classList.remove('prancing');
         }
 
         function drag(e) {
             if (activeRider) {
-                e.preventDefault(); // Prevents screen from pulling down on mobile
+                e.preventDefault(); // Prevents screen pulling down on mobile
                 isDragging = true;
-                
                 let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-                
                 activeRider.style.left = (clientX - offsetX) + 'px';
                 activeRider.style.top = (clientY - offsetY) + 'px';
                 activeRider.style.bottom = 'auto'; 
@@ -361,12 +418,10 @@
 
         function dragEnd(e) {
             if (activeRider) {
-                // If they just clicked and didn't drag, drop a poop!
                 if (!isDragging) {
+                    // Click! Drop poop/spin.
                     unicornSurprise(activeRider);
                 }
-                
-                // Start prancing again
                 activeRider.classList.add('prancing');
                 activeRider = null;
             }
