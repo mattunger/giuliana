@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inside Giuliana's Castle</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Elegant marble stone */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            text-align: center; color: #333; overflow: hidden;
+        }
+
+        /* Whimsical Royal Wallpaper */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 20 20"><text y="16" font-size="12">✨</text></svg>'),
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 20 20"><text y="16" font-size="10">👑</text></svg>');
+            opacity: 0.1; z-index: -1;
+        }
+
+        /* Royal Polished Wooden Floor */
+        #floor {
+            position: fixed; bottom: 0; width: 100%; height: 25vh;
+            background-color: #8e6e46; /* Rich brown wood */
+            border-top: 10px solid #a0522d;
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        /* --- UI ELEMENTS --- */
+        .back-button {
+            position: fixed; top: 20px; left: 20px;
+            background-color: #FF69B4; color: white; border: 4px solid white;
+            padding: 15px 25px; border-radius: 30px; font-size: 1.5rem;
+            cursor: pointer; text-decoration: none; z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.2s;
+        }
+        .back-button:hover { transform: scale(1.1); }
+
+        .header-text {
+            margin-top: 40px; display: inline-block; padding: 10px 30px;
+            color: #FF1493; position: relative; z-index: 5;
+        }
+        h1 { margin: 0; font-size: 3.5rem; filter: drop-shadow(2px 2px 0 white); }
+
+        /* --- DRAGGABLE FURNITURE STYLING --- */
+        .draggable {
+            position: fixed; cursor: grab; user-select: none; touch-action: none;
+            filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.3));
+            z-index: 50; transition: transform 0.2s;
+        }
+        .draggable:active { cursor: grabbing; transform: scale(1.05); z-index: 1000 !important; }
+
+        /* Oversized invisible grab box for kids */
+        .draggable::after { content: ''; position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; }
+
+        /* --- THE MAGIC CLOTHES WARDROBE --- */
+        #wardrobe { width: 220px; height: 300px; left: 10%; top: 30%; }
+        
+        .wardrobe-visual {
+            width: 100%; height: 100%; background-color: #DDA0DD; /* Plum color */
+            border: 8px solid #BA55D3; border-radius: 20px; position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 20px;
+        }
+        /* Wardrobe Doors/Handles */
+        .wardrobe-visual::before {
+            content: ''; position: absolute; top: 10%; left: 50%; width: 4px; height: 80%; background-color: #BA55D3;
+        }
+        .wardrobe-visual::after {
+            content: '💎 💎'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 20px; letter-spacing: 15px; color: #FFD700;
+        }
+        #wardrobe .label { font-size: 1.2rem; color: white; background-color: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 10px; }
+
+        /* Clothes hanging inside (Clickable to change princess dress!) */
+        #clothing-rack {
+            position: fixed; top: 100px; right: 20px; width: 300px;
+            background-color: rgba(255,255,255,0.8); border: 4px dashed #FF69B4;
+            border-radius: 20px; padding: 15px; z-index: 200;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+        }
+        #clothing-rack h2 { grid-column: 1 / -1; margin: 0 0 10px 0; color: #FF1493; font-size: 1.3rem; }
+        .dress-option {
+            font-size: 50px; cursor: pointer; border-radius: 10px; transition: background 0.2s; padding: 5px;
+        }
+        .dress-option:hover { background-color: #FFB6C1; }
+
+        /* --- THE BED --- */
+        #bed { width: 280px; height: 180px; right: 10%; top: 40%; }
+        
+        .bed-visual {
+            width: 100%; height: 100%; background-color: #FFB6C1; /* Light pink mattress */
+            border: 6px solid #FF69B4; border-radius: 15px; position: relative;
+        }
+        /* Pillow and Sheets */
+        .bed-visual::before {
+            content: '⬜'; font-size: 70px; position: absolute; top: 10px; left: 20px; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+        }
+        .bed-visual::after {
+            content: '👑'; font-size: 30px; position: absolute; bottom: 20px; right: 20px; opacity: 0.5;
+        }
+        /* Royal Headboard (CSS shape) */
+        .headboard {
+            position: absolute; top: -40px; left: 0; width: 100%; height: 60px;
+            background-color: #FF69B4; border-radius: 30px 30px 0 0; border: 6px solid #FF69B4; border-bottom: none;
+        }
+        /* Canopy posts hint */
+        .bed-post { position: absolute; bottom: -10px; width: 12px; height: 110%; background-color: #a0522d; border-radius: 5px; }
+        .bp-l { left: -10px; } .bp-r { right: -10px; }
+
+        /* --- OTHER ITEMS --- */
+        .item-small { font-size: 70px; }
+        .item-medium { font-size: 100px; }
+
+        /* --- PRINCESS ENTITIES (Reused from Garden, scaled up) --- */
+        .princess-entity { z-index: 100; width: 120px; height: 150px; transform: scale(1.2); } /* Scaled up for indoors */
+        .princess-content { width: 100%; height: 100%; display: flex; justify-content: center; transition: transform 0.3s; }
+        .princess-content svg { width: 100%; height: 100%; }
+
+    </style>
+</head>
+<body id="castle-interior">
+
+    <a href="index.html" class="back-button">⬅️ Back to Tea Party</a>
+
+    <div class="header-text">
+        <h1>Giuliana's Castle</h1>
+        <p style="font-size: 1.5rem; color: #555; margin: 0;">Inside the Royal Bedroom</p>
+    </div>
+
+    <div id="floor"></div>
+
+    <div id="wardrobe" class="draggable" style="left: 10%; top: 30%;">
+        <div class="wardrobe-visual">
+            <div class="label">Royal Clothes</div>
+        </div>
+    </div>
+
+    <div id="clothing-rack">
+        <h2>Tap a dress to change Pink Princess!</h2>
+        <div class="dress-option" onclick="changeDress('#FF69B4')">👗</div> <div class="dress-option" onclick="changeDress('#3498db')">👗</div> <div class="dress-option" onclick="changeDress('#f1c40f')">👗</div> <div class="dress-option" onclick="changeDress('#2ecc71')">👗</div> <div class="dress-option" onclick="changeDress('#e74c3c')">👗</div> <div class="dress-option" onclick="changeDress('#ffffff')">👗</div> </div>
+
+    <div id="bed" class="draggable" style="right: 10%; top: 40%;">
+        <div class="headboard"></div>
+        <div class="bed-post bp-l"></div><div class="bed-post bp-r"></div>
+        <div class="bed-visual"></div>
+    </div>
+
+    <div class="draggable item-medium" style="left: 45%; top: 60%;">💎✨👑🧳</div>
+
+    <div class="draggable item-medium" style="left: 20%; bottom: 10vh; z-index: 60;">🧸🧩🎨🦄</div>
+    
+    <div class="draggable" style="right: 30%; top: 25%;">
+        <div style="width: 80px; height: 130px; background-color: #aed6f1; border: 8px solid #FFD700; border-radius: 40px; box-shadow: inset 0 0 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 40px;">🪞</div>
+    </div>
+
+    <div class="draggable item-small" style="left: 15%; bottom: 5vh; z-index: 60;">👠🥿👟👟</div>
+
+    <div class="draggable item-small" style="right: 20%; bottom: 8vh; z-index: 60;">🐈⬛💤🐕</div>
+
+    <div id="p1" class="draggable princess-entity" style="left: 35%; top: 40%;">
+        <div class="flip-wrapper">
+            <div class="anim-wrapper">
+                <div class="princess-content">
+                    <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 50,20 C 30,20,15,40,15,60 C 15,80,25,90,30,90 C 35,90,40,80,45,80 C 50,80,55,90,60,90 C 65,90,75,80,75,60 C 75,40,70,20,50,20 Z" fill="#8B4513"/>
+                        
+                        <path id="p1-dress" d="M 40,80 C 20,80,10,100,10,130 C 10,150,90,150,90,130 C 90,100,80,80,60,80 Z" fill="#FF69B4" stroke="#e0e0e0" stroke-width="2"/>
+                        
+                        <ellipse cx="50" cy="55" rx="15" ry="18" fill="#FFE4C4"/>
+                        <ellipse cx="45" cy="52" rx="2" ry="3" fill="#333"/> <ellipse cx="55" cy="52" rx="2" ry="3" fill="#333"/>
+                        <path d="M 45,62 C 48,65,52,65,55,62" stroke="#FF1493" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <path d="M 40,40 L 40,30 L 45,35 L 50,30 L 55,35 L 60,30 L 60,40 Z" fill="#FFD700" stroke="#f1c40f" stroke-width="1"/>
+                        <ellipse cx="40" cy="75" rx="5" ry="5" fill="#e0e0e0" stroke="white"/> <ellipse cx="60" cy="75" rx="5" ry="5" fill="#e0e0e0" stroke="white"/>
+                        <rect x="48" y="85" width="4" height="20" rx="2" fill="white" opacity="0.5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="p2" class="draggable princess-entity" style="left: 55%; top: 40%;">
+        <div class="flip-wrapper">
+            <div class="anim-wrapper">
+                <div class="princess-content">
+                    <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 50,20 C 65,20,75,30,75,45 C 75,60,65,70,50,70 C 35,70,25,60,25,45 C 25,30,35,20,50,20 Z M 50,15 C 60,15,65,10,65,5 C 65,-2,50,2,50,-2" fill="#F0E68C"/>
+                        <path d="M 40,75 C 20,75,10,95,10,125 C 10,145,90,145,90,125 C 90,95,80,75,60,75 Z" fill="#9370DB" stroke="#e0e0e0" stroke-width="2"/>
+                        <ellipse cx="50" cy="50" rx="15" ry="18" fill="#FFE4C4"/>
+                        <ellipse cx="45" cy="47" rx="2" ry="3" fill="#333"/> <ellipse cx="55" cy="47" rx="2" ry="3" fill="#333"/>
+                        <path d="M 45,57 C 48,60,52,60,55,57" stroke="#FF1493" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <path d="M 42,35 L 45,28 L 50,25 L 55,28 L 58,35" fill="#e0e0e0" stroke="#eee" stroke-width="1.5"/>
+                        <path d="M 40,75 L 50,85 L 60,75" fill="#e0e0e0" stroke="white" stroke-width="1"/>
+                        <rect x="48" y="90" width="4" height="25" rx="2" fill="white" opacity="0.3"/> 
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DRAG LOGIC (Works on Mouse and Touch!) ---
+        let activeElement = null;
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        const draggables = document.querySelectorAll('.draggable');
+
+        draggables.forEach(el => {
+            el.addEventListener('mousedown', dragStart);
+            el.addEventListener('touchstart', dragStart, { passive: false });
+        });
+
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+
+        function dragStart(e) {
+            activeElement = this;
+            isDragging = false;
+            
+            // Pop to front while dragging
+            activeElement.style.zIndex = 1000;
+            
+            let rect = activeElement.getBoundingClientRect();
+            
+            if (e.type === 'touchstart') {
+                offsetX = e.touches[0].clientX - rect.left;
+                offsetY = e.touches[0].clientY - rect.top;
+            } else {
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+            }
+        }
+
+        function drag(e) {
+            if (activeElement) {
+                e.preventDefault(); // Prevents screen pulling down on mobile
+                isDragging = true;
+                
+                let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+                
+                activeElement.style.left = (clientX - offsetX) + 'px';
+                activeElement.style.top = (clientY - offsetY) + 'px';
+                activeElement.style.bottom = 'auto'; // Reset bottom/right positioning
+                activeElement.style.right = 'auto';
+            }
+        }
+
+        function dragEnd(e) {
+            if (activeElement) {
+                // Return to a logical z-index on drop.
+                // Keep princesses (SVGs) slightly ahead of furniture emojis
+                let id = activeElement.id;
+                if (id === 'p1' || id === 'p2') activeElement.style.zIndex = 100;
+                else activeElement.style.zIndex = 50;
+
+                activeElement = null;
+            }
+        }
+
+        // --- MAGIC DRESS CHANGER LOGIC ---
+        function changeDress(color) {
+            // Find the specific SVG path for Princess 1's dress and change its fill color!
+            document.getElementById('p1-dress').style.fill = color;
+            
+            // Sprinkle some magic dust effect
+            sprinkleMagic();
+        }
+
+        function sprinkleMagic() {
+            for(let i=0; i<10; i++) {
+                let spark = document.createElement('div');
+                spark.innerText = '✨';
+                spark.style.position = 'fixed';
+                spark.style.fontSize = '30px';
+                spark.style.zIndex = '500';
+                
+                // Position near the princess
+                let pRect = document.getElementById('p1').getBoundingClientRect();
+                spark.style.left = (pRect.left + 40 + (Math.random()*40 - 20)) + 'px';
+                spark.style.top = (pRect.top + 70 + (Math.random()*40 - 20)) + 'px';
+                
+                document.body.appendChild(spark);
+                
+                // Animate out
+                setTimeout(() => {
+                    spark.style.transition = "all 0.8s ease-out";
+                    spark.style.transform = `translate(${Math.random()*100-50}px, ${Math.random()*100-50}px) scale(0)`;
+                    spark.style.opacity = '0';
+                    setTimeout(() => spark.remove(), 800);
+                }, 10);
+            }
+        }
+
+    </script>
+</body>
+</html>
