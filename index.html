@@ -86,7 +86,7 @@
         .tea-party { font-size: 80px; animation: bounce 4s ease-in-out infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* Temporary click grow and Permanent rain grow effects */
+        /* Flower effects */
         .grown-flower { transform: scale(1.6) !important; } 
         .grow { transform: scale(2.2) translateY(-20px) !important; } 
         
@@ -97,129 +97,83 @@
         }
         @keyframes plop { 0% { transform: scale(0) translateY(-30px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
-        /* --- THE MAGIC DRAGGABLE UNICORN RIDERS (Updated with full bodies!) --- */
+        /* --- DRAGGABLE RIDERS --- */
         .draggable-rider {
             position: fixed; cursor: grab; z-index: 40; user-select: none; touch-action: none;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
         .draggable-rider:active { cursor: grabbing; }
         
-        /* Gentle Prancing Animation */
         .prancing { animation: prance 3s ease-in-out infinite; }
         @keyframes prance {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px) rotate(-3deg); }
         }
 
-        /* The Princess Rider (sitting on the constructed body) */
+        /* --- NEW: REALISTIC ILLUSTRATED SVG PRINCESSES --- */
         .rider-princess {
-            position: absolute; top: -10px; left: 15px; transform: scale(0.65);
-            display: flex; flex-direction: column; align-items: center;
+            position: absolute; 
+            top: -60px; /* Positions her over the unicorn's back */
+            left: 10px;
+            width: 80px; height: 100px;
+            z-index: 10; /* Put her ON TOP of the unicorn */
             pointer-events: none; /* Dragging grabs the whole unit */
+            display: flex; justify-content: center;
         }
-        .p-head { font-size: 60px; margin-bottom: -15px; }
-        .p-body {
-            width: 60px; height: 60px; border-radius: 50% 50% 10px 10px;
-            border: 3px solid white; box-shadow: 2px 4px 5px rgba(0,0,0,0.2);
-            position: relative; background-color: hotpink;
-        }
-        .p-body::after {
-            content: ''; position: absolute; bottom: -8px; left: 10px; width: 40px; height: 10px;
-            background-color: #f1c40f; border-radius: 5px; /* Golden shoes */
-        }
-        .p2-color .p-body { background-color: mediumpurple; }
+        .rider-princess svg { width: 100%; height: 100%; }
 
-        /* --- THE CONSTRUCTED FULL-BODY UNICORN STYLING --- */
+        /* --- THE CONSTRUCTED FULL-BODY UNICORN --- */
         .constructed-unicorn {
-            position: relative;
-            display: flex; flex-direction: column; align-items: center;
-            width: 100px; height: 120px; /* Base container size */
-            transition: transform 0.8s ease-in-out; /* For the cartwheel */
-            pointer-events: none; /* Make sure dragging targets the outer rider */
+            position: relative; display: flex; flex-direction: column; align-items: center;
+            width: 100px; height: 120px; 
+            transition: transform 0.8s ease-in-out; pointer-events: none; 
+            z-index: 5; /* Sit behind princess */
         }
 
-        /* Head (The Emoji) */
-        .u-head { font-size: 80px; margin-bottom: -15px; z-index: 5; }
+        .u-head { font-size: 80px; margin-bottom: -15px; z-index: 6; }
         
-        /* Body (Built with CSS) */
         .u-body {
             width: 80px; height: 70px; background-color: white;
-            border-radius: 50% 50% 20px 20px; /* Simple oval/body shape */
-            border: 3px solid #eee; position: relative;
-            box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+            border-radius: 50% 50% 20px 20px; border: 3px solid #eee; position: relative;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.1); z-index: 5;
         }
-
-        /* Tail and Mane details (pure CSS shadows/ovals) */
+        /* Tail and Mane details */
         .u-body::before { /* Tail */
             content: ''; position: absolute; bottom: 10px; right: -25px;
             width: 30px; height: 40px; border-radius: 50% 50% 0 0;
-            background: linear-gradient(#FF69B4, #9370DB); /* Pink to purple tail */
-            border: 2px solid white; transform: rotate(15deg);
+            background: linear-gradient(#FF69B4, #9370DB); border: 2px solid white; transform: rotate(15deg);
         }
         .u-body::after { /* Mane */
             content: ''; position: absolute; top: -5px; left: 10px;
             width: 50px; height: 15px; border-radius: 10px;
-            background: linear-gradient(#FFD700, #FF69B4, #9370DB); /* Colorful mane */
-            border: 1px solid white;
+            background: linear-gradient(#FFD700, #FF69B4, #9370DB); border: 1px solid white;
         }
 
-        /* Legs (Pseudo-elements from the main body element) */
-        .u-leg-pair {
-            position: absolute; width: 60px; bottom: -20px; left: 10px;
-            display: flex; justify-content: space-between;
-        }
-        .u-leg {
-            width: 15px; height: 25px; background-color: white;
-            border: 2px solid #eee; border-radius: 5px; position: relative;
-        }
-        .u-leg::after { /* Shoes */
-            content: ''; position: absolute; bottom: -4px; left: -1px;
-            width: 17px; height: 6px; background-color: gold; border-radius: 3px;
-        }
+        /* Legs */
+        .u-leg-pair { position: absolute; width: 60px; bottom: -20px; left: 10px; display: flex; justify-content: space-between; z-index: 4; }
+        .u-leg { width: 15px; height: 25px; background-color: white; border: 2px solid #eee; border-radius: 5px; position: relative; }
+        .u-leg::after { content: ''; position: absolute; bottom: -4px; left: -1px; width: 17px; height: 6px; background-color: gold; border-radius: 3px; }
         
-        /* Wings! (Positioned on the side of the body) */
+        /* Wings! */
         .u-wing {
-            position: absolute; top: -10px;
-            width: 50px; height: 50px; background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 50% 10px 50% 50%; /* Feathery shape */
+            position: absolute; top: 10px; width: 50px; height: 50px; 
+            background-color: rgba(255, 255, 255, 0.9); border-radius: 50% 10px 50% 50%; 
             border: 3px solid white; z-index: 4;
-            display: flex; justify-content: space-between; align-items: flex-end; padding: 2px;
             animation: flutter 2s ease-in-out infinite;
         }
-        /* Wing feathery bits hint */
-        .u-wing::after {
-            content: ''; position: absolute; top: 10px; left: 10px; width: 25px; height: 25px;
-            border-radius: 50%; border: 2px dashed #9370DB; /* Purple highlights */
-        }
+        /* Wing highlights */
+        .u-wing::after { content: ''; position: absolute; top: 10px; left: 10px; width: 25px; height: 25px; border-radius: 50%; border: 2px dashed #9370DB; }
+        .u-wing-right { right: -20px; }
+        .u-wing-left { left: -20px; animation-name: flutter-left; }
 
-        .u-wing-right { right: -20px; top: 10px; }
-        .u-wing-left { left: -20px; top: 10px; transform: scaleX(-1); }
+        @keyframes flutter { 0%, 100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-5px) scaleY(1.05); } }
+        @keyframes flutter-left { 0%, 100% { transform: scaleX(-1) translateY(0) scaleY(1); } 50% { transform: scaleX(-1) translateY(-5px) scaleY(1.05); } }
 
-        /* Wing flutter animation */
-        @keyframes flutter {
-            0%, 100% { transform: translateY(0) scaleY(1); }
-            50% { transform: translateY(-5px) scaleY(1.05); }
-        }
-        
-        /* Apply flutter separately for the left wing to handle flipping */
-        .u-wing-left { animation-name: flutter-left; }
-        @keyframes flutter-left {
-            0%, 100% { transform: scaleX(-1) translateY(0) scaleY(1); }
-            50% { transform: scaleX(-1) translateY(-5px) scaleY(1.05); }
-        }
-
-        /* Flips the entire constructed unit for the second rider */
-        .flip-unicorn { transform: scaleX(-1) !important; }
-
-        /* The Spin/Cartwheel Animation (Applied to the constructed-unicorn element) */
+        /* The Spin/Cartwheel Animation */
         .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
-        @keyframes cartwheel {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.4) rotate(180deg); }
-            100% { transform: scale(1) rotate(360deg); }
-        }
+        @keyframes cartwheel { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.4) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
 
-        /* Tea Party Message Box */
+        /* Tea Party Message */
         #tea-message {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background-color: #FFF0F5; border: 5px solid #FF69B4; border-radius: 30px;
@@ -261,7 +215,13 @@
 
     <div class="draggable-rider prancing" style="left: 15%; bottom: 30px;">
         <div class="rider-princess">
-            <div class="p-head">👸</div><div class="p-body"></div>
+            <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 50,20 C 30,20,15,40,15,60 C 15,80,25,90,30,90 C 35,90,40,80,45,80 C 50,80,55,90,60,90 C 65,90,75,80,75,60 C 75,40,70,20,50,20 Z" fill="#8B4513"/>
+                <path d="M 40,80 C 20,80,10,100,10,130 C 10,150,90,150,90,130 C 90,100,80,80,60,80 Z" fill="#FF69B4" stroke="#e0e0e0" stroke-width="2"/>
+                <ellipse cx="50" cy="55" rx="15" ry="18" fill="#FFE4C4"/> <ellipse cx="45" cy="52" rx="2" ry="3" fill="#333"/> <ellipse cx="55" cy="52" rx="2" ry="3" fill="#333"/>
+                <path d="M 45,62 C 48,65,52,65,55,62" stroke="#FF1493" stroke-width="2" fill="none" stroke-linecap="round"/> <path d="M 40,40 L 40,30 L 45,35 L 50,30 L 55,35 L 60,30 L 60,40 Z" fill="#FFD700" stroke="#f1c40f" stroke-width="1"/>
+                <ellipse cx="40" cy="75" rx="5" ry="5" fill="#e0e0e0" stroke="white"/> <ellipse cx="60" cy="75" rx="5" ry="5" fill="#e0e0e0" stroke="white"/>
+                <rect x="48" y="85" width="4" height="20" rx="2" fill="white" opacity="0.5"/> </svg>
         </div>
         <div class="constructed-unicorn">
             <div class="u-head">🦄</div>
@@ -276,10 +236,17 @@
     </div>
 
     <div class="draggable-rider prancing" style="right: 15%; bottom: 30px;">
-        <div class="rider-princess p2-color">
-            <div class="p-head">👸</div><div class="p-body"></div>
+        <div class="rider-princess">
+            <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 50,20 C 65,20,75,30,75,45 C 75,60,65,70,50,70 C 35,70,25,60,25,45 C 25,30,35,20,50,20 Z M 50,15 C 60,15,65,10,65,5 C 65,-2,50,2,50,-2" fill="#F0E68C"/>
+                <path d="M 40,75 C 20,75,10,95,10,125 C 10,145,90,145,90,125 C 90,95,80,75,60,75 Z" fill="#9370DB" stroke="#e0e0e0" stroke-width="2"/>
+                <ellipse cx="50" cy="50" rx="15" ry="18" fill="#FFE4C4"/> <ellipse cx="45" cy="47" rx="2" ry="3" fill="#333"/> <ellipse cx="55" cy="47" rx="2" ry="3" fill="#333"/>
+                <path d="M 45,57 C 48,60,52,60,55,57" stroke="#FF1493" stroke-width="2" fill="none" stroke-linecap="round"/> <path d="M 42,35 L 45,28 L 50,25 L 55,28 L 58,35" fill="#e0e0e0" stroke="#eee" stroke-width="1.5"/>
+                <path d="M 40,75 L 50,85 L 60,75" fill="#e0e0e0" stroke="white" stroke-width="1"/>
+                <rect x="48" y="90" width="4" height="25" rx="2" fill="white" opacity="0.3"/> 
+            </svg>
         </div>
-        <div class="constructed-unicorn flip-unicorn">
+        <div class="constructed-unicorn" style="transform: scaleX(-1);">
             <div class="u-head">🦄</div>
             <div class="u-wing u-wing-right"></div>
             <div class="u-wing u-wing-left"></div>
@@ -345,7 +312,6 @@
             setTimeout(() => { element.classList.remove('grow'); }, 800); 
         }
 
-        // Updated unicornSurprise function: finds the constructed-unicorn and targets it for spin/poop
         function unicornSurprise(activeRider) {
             const unicorn = activeRider.querySelector('.constructed-unicorn');
             unicorn.classList.add('spin-magic');
@@ -358,8 +324,13 @@
             // Get position relative to the main body element
             let bodyRect = activeRider.querySelector('.u-body').getBoundingClientRect();
             
-            // Poop placement logic for the full-body unicorn
-            poop.style.left = (bodyRect.right - 10) + 'px'; // Drop it near the back
+            // Poop placement logic (compensate for Rider 2 being flipped)
+            if (activeRider.style.right && activeRider.style.right !== 'auto') {
+                poop.style.left = (bodyRect.left - 20) + 'px'; // Drop it near the back
+            } else {
+                poop.style.left = (bodyRect.right - 10) + 'px'; // Drop it near the back
+            }
+            
             poop.style.top = (bodyRect.bottom - 10) + 'px'; 
             document.body.appendChild(poop);
 
