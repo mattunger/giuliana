@@ -12,14 +12,13 @@
             transition: background-color 1.5s ease; 
         }
         
-        /* Sun / Moon / Storm Cloud */
+        /* --- ENVIRONMENT ELEMENTS --- */
         .sun {
             font-size: 100px; position: fixed; top: 20px; right: 40px;
             animation: spin 20s linear infinite; cursor: pointer; user-select: none; z-index: 50; 
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Rainbow Layer */
         #rainbow-layer {
             display: none; position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
             width: 700px; height: 350px; border-radius: 350px 350px 0 0;
@@ -30,7 +29,6 @@
             ); filter: blur(5px); opacity: 0.7; z-index: 2; 
         }
 
-        /* Butterflies */
         .butterfly-container { transition: opacity 1s ease; }
         .butterfly {
             position: fixed; font-size: 40px; top: 150px; left: -50px;
@@ -45,7 +43,6 @@
             100% { left: 110%; transform: translateY(0px); }
         }
 
-        /* Rain Layer */
         #rain-layer {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 15; 
@@ -57,7 +54,6 @@
         }
         @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* Header Text */
         .header-text {
             margin-top: 80px; background-color: rgba(255, 255, 255, 0.85);
             display: inline-block; padding: 30px 50px; border-radius: 40px;
@@ -68,7 +64,7 @@
         h1 { margin: 0; font-size: 3rem; color: #FF1493; }
         p { font-size: 1.8rem; margin: 15px 0 0 0; color: #555; }
 
-        /* The Grass */
+        /* Grass sits in front of the castle, behind entities */
         .grass {
             position: fixed; bottom: 0; width: 100%; min-height: 25vh;
             background-color: #7CFC00; border-top: 10px solid #32CD32;
@@ -76,7 +72,6 @@
             padding-bottom: 20px; z-index: 20;
         }
 
-        /* Scene Items */
         .scene-item {
             font-size: 70px; filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2));
             cursor: pointer; user-select: none; transition: transform 1s ease; 
@@ -86,25 +81,77 @@
         .grown-flower { transform: scale(1.6) !important; } 
         .grow { transform: scale(2.2) translateY(-20px) !important; } 
         
-        /* Poop Animation */
         .poop {
             position: fixed; font-size: 50px; z-index: 30; 
             animation: plop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; pointer-events: none; 
         }
         @keyframes plop { 0% { transform: scale(0) translateY(-30px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
-        /* --- NEW: ENTITY SYSTEM (Princesses & Unicorns separated) --- */
+        /* --- THE BEAUTIFUL CASTLE --- */
+        #castle {
+            position: fixed; bottom: 15vh; /* Sits slightly into the grass */
+            left: 50%; transform: translateX(-50%);
+            width: 500px; height: 350px;
+            background: linear-gradient(135deg, #bdc3c7, #95a5a6); /* Stone texture */
+            border: 4px solid #7f8c8d; border-bottom: none;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 5; /* In background */
+            pointer-events: auto; /* Required for collision detection */
+        }
+        /* Battlement details */
+        #castle::before {
+            content: ''; position: absolute; top: -15px; left: -4px; width: calc(100% + 8px); height: 20px;
+            background: repeating-linear-gradient(90deg, #7f8c8d, #7f8c8d 20px, transparent 20px, transparent 40px);
+        }
+
+        .tower {
+            position: absolute; bottom: 0; width: 60px;
+            background: linear-gradient(to right, #95a5a6, #bdc3c7);
+            border: 4px solid #7f8c8d;
+        }
+        .tower-main { height: 100%; border-bottom: none; }
+        .tower-main.left { left: 0; border-radius: 20px 0 0 0; }
+        .tower-main.right { right: 0; border-radius: 0 20px 0 0; }
+        .tower-mid { height: 130%; left: 50%; transform: translateX(-50%); width: 80px; }
+        
+        .roof {
+            position: absolute; top: -50px; left: -4px; width: calc(100% + 8px); height: 50px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Triangle shape */
+        }
+        .roof-blue { background-color: #3498db; }
+        .roof-pink { background-color: #ff69b4; }
+        
+        .flag {
+            position: absolute; top: -80px; left: 50%; font-size: 30px;
+            animation: flag-wave 2s ease-in-out infinite alternate; transform-origin: left;
+        }
+        @keyframes flag-wave { 0% { transform: scaleX(1) rotate(5deg); } 100% { transform: scaleX(0.8) rotate(-5deg); } }
+
+        /* The Door */
+        #castle-door {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 100px; background-color: #8e44ad;
+            border: 4px solid #7f8c8d; border-radius: 40px 40px 0 0;
+        }
+
+        /* --- DRAGGABLE ENTITIES --- */
         .draggable {
             position: fixed; cursor: grab; user-select: none; touch-action: none;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
         .draggable:active { cursor: grabbing; }
         .unicorn-entity { z-index: 40; width: 100px; height: 120px; }
-        .princess-entity { z-index: 45; width: 80px; height: 100px; } /* Princesses sit in front */
+        .princess-entity { z-index: 45; width: 80px; height: 100px; transition: transform 0.2s, top 0.2s, left 0.2s; } 
 
-        /* Animation Wrappers (Prevents Transform Conflicts) */
-        .flip-wrapper { transition: transform 0.2s; }
-        .anim-wrapper { transition: transform 0.2s; }
+        /* Used when princess is 'in' the castle */
+        .princess-scaled-down { 
+            transform: scale(0.4) !important; /* Shrink to fit in window */
+            z-index: 6 !important; /* Sit just in front of castle walls */
+        }
+
+        .flip-wrapper { transition: transform 0.2s; height: 100%; width: 100%; }
+        .anim-wrapper { transition: transform 0.2s; height: 100%; width: 100%; }
         
         .prancing { animation: prance 3s ease-in-out infinite; }
         .walking-bounce { animation: walk-bob 0.4s ease-in-out infinite alternate; }
@@ -112,36 +159,29 @@
         @keyframes prance { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px) rotate(-3deg); } }
         @keyframes walk-bob { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
 
-        /* Click to Spin */
         .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
         @keyframes cartwheel { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.4) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
 
-        /* --- PRINCESS CONTENT --- */
+        /* PRINCESS CONTENT */
         .princess-content { width: 100%; height: 100%; display: flex; justify-content: center; }
         .princess-content svg { width: 100%; height: 100%; }
 
-        /* --- UNICORN CONTENT --- */
+        /* UNICORN CONTENT */
         .constructed-unicorn { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; }
         .u-head { font-size: 80px; margin-bottom: -15px; z-index: 6; }
-        .u-body {
-            width: 80px; height: 70px; background-color: white; border-radius: 50% 50% 20px 20px;
-            border: 3px solid #eee; position: relative; box-shadow: 2px 4px 8px rgba(0,0,0,0.1); z-index: 5;
-        }
-        .u-body::before { /* Tail */ content: ''; position: absolute; bottom: 10px; right: -25px; width: 30px; height: 40px; border-radius: 50% 50% 0 0; background: linear-gradient(#FF69B4, #9370DB); border: 2px solid white; transform: rotate(15deg); }
-        .u-body::after { /* Mane */ content: ''; position: absolute; top: -5px; left: 10px; width: 50px; height: 15px; border-radius: 10px; background: linear-gradient(#FFD700, #FF69B4, #9370DB); border: 1px solid white; }
+        .u-body { width: 80px; height: 70px; background-color: white; border-radius: 50% 50% 20px 20px; border: 3px solid #eee; position: relative; box-shadow: 2px 4px 8px rgba(0,0,0,0.1); z-index: 5; }
+        .u-body::before { content: ''; position: absolute; bottom: 10px; right: -25px; width: 30px; height: 40px; border-radius: 50% 50% 0 0; background: linear-gradient(#FF69B4, #9370DB); border: 2px solid white; transform: rotate(15deg); }
+        .u-body::after { content: ''; position: absolute; top: -5px; left: 10px; width: 50px; height: 15px; border-radius: 10px; background: linear-gradient(#FFD700, #FF69B4, #9370DB); border: 1px solid white; }
         .u-leg-pair { position: absolute; width: 60px; bottom: -20px; left: 10px; display: flex; justify-content: space-between; z-index: 4; }
         .u-leg { width: 15px; height: 25px; background-color: white; border: 2px solid #eee; border-radius: 5px; position: relative; }
         .u-leg::after { content: ''; position: absolute; bottom: -4px; left: -1px; width: 17px; height: 6px; background-color: gold; border-radius: 3px; }
-        
         .u-wing { position: absolute; top: 10px; width: 50px; height: 50px; background-color: rgba(255, 255, 255, 0.9); border-radius: 50% 10px 50% 50%; border: 3px solid white; z-index: 4; animation: flutter 2s ease-in-out infinite; }
         .u-wing::after { content: ''; position: absolute; top: 10px; left: 10px; width: 25px; height: 25px; border-radius: 50%; border: 2px dashed #9370DB; }
         .u-wing-right { right: -20px; }
         .u-wing-left { left: -20px; animation-name: flutter-left; }
-
         @keyframes flutter { 0%, 100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-5px) scaleY(1.05); } }
         @keyframes flutter-left { 0%, 100% { transform: scaleX(-1) translateY(0) scaleY(1); } 50% { transform: scaleX(-1) translateY(-5px) scaleY(1.05); } }
 
-        /* Tea Party Message */
         #tea-message {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background-color: #FFF0F5; border: 5px solid #FF69B4; border-radius: 30px;
@@ -164,6 +204,13 @@
         <p>Welcome to my garden tea party! 🫖✨</p>
     </div>
 
+    <div id="castle">
+        <div class="tower tower-main left"><div class="roof roof-blue"></div></div>
+        <div class="tower tower-main right"><div class="roof roof-blue"></div></div>
+        <div class="tower tower-mid"><div class="roof roof-pink"></div><div class="flag">🚩</div></div>
+        <div id="castle-door"></div>
+    </div>
+
     <div id="tea-message" onclick="closeMessage()">
         "Would you like a cup of tea and a cupcake?" 🧁☕<br>
         <span style="font-size: 1.5rem; color: #555;">(Click to close)</span>
@@ -177,7 +224,7 @@
         <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
     </div>
 
-    <div id="u1" class="draggable unicorn-entity" style="left: 15%; top: 40%;">
+    <div id="u1" class="draggable unicorn-entity" style="left: 15%; top: 60%;">
         <div class="flip-wrapper">
             <div class="anim-wrapper prancing">
                 <div class="spin-magic-target constructed-unicorn">
@@ -189,7 +236,7 @@
         </div>
     </div>
 
-    <div id="u2" class="draggable unicorn-entity" style="right: 15%; top: 50%;">
+    <div id="u2" class="draggable unicorn-entity" style="right: 15%; top: 70%;">
         <div class="flip-wrapper">
             <div class="anim-wrapper prancing">
                 <div class="spin-magic-target constructed-unicorn">
@@ -203,7 +250,8 @@
 
     <div id="p1" class="draggable princess-entity" style="left: 0; top: 0;">
         <div class="flip-wrapper">
-            <div class="anim-wrapper"> <div class="spin-magic-target princess-content">
+            <div class="anim-wrapper">
+                <div class="spin-magic-target princess-content">
                     <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 50,20 C 30,20,15,40,15,60 C 15,80,25,90,30,90 C 35,90,40,80,45,80 C 50,80,55,90,60,90 C 65,90,75,80,75,60 C 75,40,70,20,50,20 Z" fill="#8B4513"/>
                         <path d="M 40,80 C 20,80,10,100,10,130 C 10,150,90,150,90,130 C 90,100,80,80,60,80 Z" fill="#FF69B4" stroke="#e0e0e0" stroke-width="2"/>
@@ -274,37 +322,35 @@
             }
         }
 
-        // Click Effects
         function makeGrow(el) { el.classList.add('grow'); setTimeout(() => el.classList.remove('grow'), 800); }
         function showTeaMessage() { document.getElementById('tea-message').style.display = 'block'; }
         function closeMessage() { document.getElementById('tea-message').style.display = 'none'; }
 
-        // --- THE NEW GAME ENGINE FOR WALKING & RIDING ---
+        // --- GAME ENGINE ---
         let ents = [
-            { id: 'u1', type: 'unicorn', el: document.getElementById('u1'), vx: 1.5, walking: false, flipped: false, grassY: 0 },
-            { id: 'u2', type: 'unicorn', el: document.getElementById('u2'), vx: -1.5, walking: false, flipped: true, grassY: 0 },
-            { id: 'p1', type: 'princess', el: document.getElementById('p1'), vx: 1, walking: false, riding: 'u1', flipped: false, grassY: 0 },
-            { id: 'p2', type: 'princess', el: document.getElementById('p2'), vx: -1, walking: false, riding: 'u2', flipped: true, grassY: 0 }
+            { id: 'u1', type: 'unicorn', el: document.getElementById('u1'), vx: 1.5, walking: false, flipped: false, grassY: 0, atCastle: false },
+            { id: 'u2', type: 'unicorn', el: document.getElementById('u2'), vx: -1.5, walking: false, flipped: true, grassY: 0, atCastle: false },
+            { id: 'p1', type: 'princess', el: document.getElementById('p1'), vx: 1, walking: false, riding: 'u1', flipped: false, grassY: 0, atCastle: false },
+            { id: 'p2', type: 'princess', el: document.getElementById('p2'), vx: -1, walking: false, riding: 'u2', flipped: true, grassY: 0, atCastle: false }
         ];
 
-        // Apply initial visual directions
         ents.forEach(ent => { ent.el.querySelector('.flip-wrapper').style.transform = ent.flipped ? 'scaleX(-1)' : 'scaleX(1)'; });
 
         let activeRider = null; let isDragging = false; let offsetX = 0; let offsetY = 0;
 
         function updateLoop() {
             ents.forEach(ent => {
-                if (activeRider === ent.el) return; // Skip updating the one currently being dragged
+                if (activeRider === ent.el || ent.atCastle) return; // Skip updating dragged or castle entities
 
-                // If Princess is riding, strictly follow her unicorn
                 if (ent.type === 'princess' && ent.riding) {
                     let u = ents.find(e => e.id === ent.riding);
                     if (u && activeRider !== ent.el) {
-                        let uRect = u.el.getBoundingClientRect();
-                        ent.el.style.left = (uRect.left + 10) + 'px'; // Center on back
-                        ent.el.style.top = (uRect.top - 50) + 'px'; // Sit on back
+                        if (u.atCastle) return; // Unicorn is at castle, don't update princess position via riding logic
                         
-                        if (ent.flipped !== u.flipped) { // Match orientation
+                        let uRect = u.el.getBoundingClientRect();
+                        ent.el.style.left = (uRect.left + 10) + 'px';
+                        ent.el.style.top = (uRect.top - 50) + 'px';
+                        if (ent.flipped !== u.flipped) {
                             ent.flipped = u.flipped;
                             ent.el.querySelector('.flip-wrapper').style.transform = ent.flipped ? 'scaleX(-1)' : 'scaleX(1)';
                         }
@@ -312,19 +358,13 @@
                     }
                 }
 
-                // If walking, move side to side
                 if (ent.walking) {
                     let rect = ent.el.getBoundingClientRect();
                     let newX = rect.left + ent.vx;
-                    
-                    if (newX <= 0) {
-                        newX = 0; ent.vx *= -1; ent.flipped = false;
-                    } else if (newX + rect.width >= window.innerWidth) {
-                        newX = window.innerWidth - rect.width; ent.vx *= -1; ent.flipped = true;
-                    }
-                    
+                    if (newX <= 0) { newX = 0; ent.vx *= -1; ent.flipped = false; } 
+                    else if (newX + rect.width >= window.innerWidth) { newX = window.innerWidth - rect.width; ent.vx *= -1; ent.flipped = true; }
                     ent.el.style.left = newX + 'px';
-                    ent.el.style.top = ent.grassY + 'px'; // Lock to ground level
+                    ent.el.style.top = ent.grassY + 'px';
                     ent.el.querySelector('.flip-wrapper').style.transform = ent.flipped ? 'scaleX(-1)' : 'scaleX(1)';
                 }
             });
@@ -332,7 +372,7 @@
         }
         requestAnimationFrame(updateLoop);
 
-        // --- DRAG, DROP, CLICK LOGIC ---
+        // --- DRAG LOGIC ---
         const draggableItems = document.querySelectorAll('.draggable');
         draggableItems.forEach(item => {
             item.addEventListener('mousedown', dragStart);
@@ -344,17 +384,20 @@
         function dragStart(e) {
             activeRider = this; isDragging = false; 
             let rect = activeRider.getBoundingClientRect();
-            
             let ent = ents.find(e => e.el === activeRider);
-            if (ent && ent.type === 'princess' && ent.riding) {
-                // Instantly detach princess from unicorn when grabbed
-                ent.riding = null;
+            
+            if (ent) {
+                if (ent.type === 'princess' && ent.riding) ent.riding = null; // Dismount
+                
+                if (ent.atCastle) {
+                    // ACTION: Pulling princess out of castle
+                    ent.atCastle = false;
+                    ent.el.classList.remove('princess-scaled-down');
+                }
             }
 
             if (e.type === 'touchstart') { offsetX = e.touches[0].clientX - rect.left; offsetY = e.touches[0].clientY - rect.top; } 
             else { offsetX = e.clientX - rect.left; offsetY = e.clientY - rect.top; }
-            
-            // Stop animations while dragging
             if (ent) ent.el.querySelector('.anim-wrapper').className = 'anim-wrapper';
         }
 
@@ -370,72 +413,71 @@
 
         function dragEnd(e) {
             if (!activeRider) return;
-            
+            let castle = document.getElementById('castle');
+            let cRect = castle.getBoundingClientRect();
             let ent = ents.find(e => e.el === activeRider);
+
             if (ent) {
                 let rect = ent.el.getBoundingClientRect();
-                // Check if they were dropped in the grass area at the bottom
+                
+                // --- NEW: CASTLE LOGIC ---
+                // Check if dropped ON the castle wall area
+                let isOnCastle = (rect.left + rect.width/2 > cRect.left && 
+                                  rect.left + rect.width/2 < cRect.right &&
+                                  rect.top + rect.height/2 > cRect.top &&
+                                  rect.top + rect.height/2 < cRect.bottom);
+
+                if (ent.type === 'princess' && isOnCastle && isDragging) {
+                    // ACTION: Princess enters castle
+                    ent.atCastle = true;
+                    ent.walking = false;
+                    ent.riding = null;
+                    
+                    // Position her in a random window slot
+                    let windowX = cRect.left + 50 + (Math.random() * (cRect.width - 150));
+                    let windowY = cRect.top + 70 + (Math.random() * 100);
+
+                    ent.el.style.left = windowX + 'px';
+                    ent.el.style.top = windowY + 'px';
+                    ent.el.classList.add('princess-scaled-down'); // Shrink her
+                    ent.el.querySelector('.flip-wrapper').style.transform = 'scaleX(1)'; // Face forward
+                    activeRider = null;
+                    return; // Stop further processing
+                }
+
+                // --- EXISTING LOGIC ---
                 let isGrass = rect.bottom > window.innerHeight - 200; 
 
                 if (!isDragging) {
-                    // ACTION: It was just a click!
+                    // ACTION: Click
                     let animTarget = ent.el.querySelector('.spin-magic-target');
                     animTarget.classList.add('spin-magic');
                     setTimeout(() => animTarget.classList.remove('spin-magic'), 800);
-
                     if (ent.type === 'unicorn') {
-                        // Drop 💩
                         let poop = document.createElement('div'); poop.innerText = '💩'; poop.className = 'poop';
                         let bodyRect = ent.el.getBoundingClientRect();
-                        
-                        // Check which way the unicorn is facing to drop it behind them
-                        if (ent.flipped) poop.style.left = (bodyRect.left - 20) + 'px';
-                        else poop.style.left = (bodyRect.right - 10) + 'px';
-                        
-                        poop.style.top = (bodyRect.bottom - 20) + 'px'; 
-                        document.body.appendChild(poop);
+                        if (ent.flipped) poop.style.left = (bodyRect.left - 20) + 'px'; else poop.style.left = (bodyRect.right - 10) + 'px';
+                        poop.style.top = (bodyRect.bottom - 20) + 'px'; document.body.appendChild(poop);
                         setTimeout(() => { poop.style.transition = "opacity 1s"; poop.style.opacity = "0"; setTimeout(() => poop.remove(), 1000); }, 3000);
                     }
-                    
-                    // Put back to walking or flying
-                    if (ent.walking) ent.el.querySelector('.anim-wrapper').classList.add('walking-bounce');
-                    else ent.el.querySelector('.anim-wrapper').classList.add('prancing');
-                    
+                    if (ent.walking) ent.el.querySelector('.anim-wrapper').classList.add('walking-bounce'); else ent.el.querySelector('.anim-wrapper').classList.add('prancing');
                 } else {
-                    // ACTION: It was a drag and drop!
+                    // ACTION: Drag & Drop
                     let mounted = false;
-
                     if (ent.type === 'princess') {
-                        // Check if she was dropped close enough to a unicorn to ride it
-                        let unicorns = ents.filter(x => x.type === 'unicorn');
+                        let unicorns = ents.filter(x => x.type === 'unicorn' && !x.atCastle); // Can't mount unicorn in castle
                         for (let u of unicorns) {
                             let uRect = u.el.getBoundingClientRect();
                             let dx = (rect.left + rect.width/2) - (uRect.left + uRect.width/2);
                             let dy = (rect.top + rect.height/2) - (uRect.top + uRect.height/2);
                             if (Math.sqrt(dx*dx + dy*dy) < 120) { 
-                                ent.riding = u.id; // MOUNT UP!
-                                ent.walking = false;
-                                mounted = true;
-                                break;
+                                ent.riding = u.id; ent.walking = false; mounted = true; break;
                             }
                         }
                     }
-
                     if (!mounted) {
-                        if (isGrass) {
-                            // Land and Walk
-                            ent.walking = true;
-                            // Stagger their walking paths slightly so they aren't on the exact same line
-                            ent.grassY = window.innerHeight - rect.height - (Math.random() * 30); 
-                            if (ent.type === 'princess') ent.grassY -= 20; 
-                            
-                            ent.el.style.top = ent.grassY + 'px';
-                            ent.el.querySelector('.anim-wrapper').classList.add('walking-bounce');
-                        } else {
-                            // Fly in the sky
-                            ent.walking = false;
-                            ent.el.querySelector('.anim-wrapper').classList.add('prancing');
-                        }
+                        if (isGrass) { ent.walking = true; ent.grassY = window.innerHeight - rect.height - (Math.random() * 30); if (ent.type === 'princess') ent.grassY -= 20; ent.el.style.top = ent.grassY + 'px'; ent.el.querySelector('.anim-wrapper').classList.add('walking-bounce'); } 
+                        else { ent.walking = false; ent.el.querySelector('.anim-wrapper').classList.add('prancing'); }
                     }
                 }
             }
