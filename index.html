@@ -8,55 +8,45 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #87CEEB; /* A lovely sky blue */
+            background-color: #87CEEB; /* Sky blue */
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             text-align: center;
             color: #333;
-            overflow-x: hidden;
-            transition: background-color 1.5s ease; /* Smooth fade for sky changes */
+            overflow: hidden; /* Prevents the page from scrolling while dragging */
+            transition: background-color 1.5s ease; 
         }
         
         /* The Sun / Moon / Storm Cloud */
         .sun {
             font-size: 100px;
-            position: fixed; /* Keeps it fixed in the corner */
+            position: fixed; 
             top: 20px;
             right: 40px;
             animation: spin 20s linear infinite;
             cursor: pointer;
             user-select: none;
-            z-index: 50; /* Above almost everything */
+            z-index: 50; 
         }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- NEW: RAINBOW LAYER --- */
+        /* Rainbow Layer */
         #rainbow-layer {
-            display: none; /* Hidden by default */
+            display: none; 
             position: fixed;
             top: 100px;
             left: 50%;
             transform: translateX(-50%);
             width: 700px;
             height: 350px;
-            /* Creates the arch */
             border-radius: 350px 350px 0 0;
-            /* The radial gradient creates the bands of color */
             background: radial-gradient(circle at center 100%,
-                transparent 50%,
-                violet 50%, violet 55%,
-                indigo 55%, indigo 60%,
-                blue 60%, blue 65%,
-                green 65%, green 70%,
-                yellow 70%, yellow 75%,
-                orange 75%, orange 80%,
-                red 80%, red 85%,
-                transparent 85%
+                transparent 50%, violet 50%, violet 55%, indigo 55%, indigo 60%,
+                blue 60%, blue 65%, green 65%, green 70%, yellow 70%, yellow 75%,
+                orange 75%, orange 80%, red 80%, red 85%, transparent 85%
             );
-            filter: blur(5px); /* Makes it look dreamy */
+            filter: blur(5px);
             opacity: 0.7;
-            z-index: 2; /* Behind the text header */
+            z-index: 2; 
         }
 
         /* Flying Butterflies */
@@ -70,10 +60,7 @@
             cursor: pointer;
             z-index: 10;
         }
-        .butterfly2 {
-            top: 250px;
-            animation: fly 25s linear infinite 5s; /* Starts a bit later */
-        }
+        .butterfly2 { top: 250px; animation: fly 25s linear infinite 5s; }
         @keyframes fly {
             0% { left: -10%; transform: translateY(0px); }
             25% { transform: translateY(-30px); }
@@ -82,28 +69,24 @@
             100% { left: 110%; transform: translateY(0px); }
         }
 
-        /* --- NEW: RAIN LAYER & Drop styling --- */
+        /* Rain Layer */
         #rain-layer {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; /* Can click through the rain */
-            z-index: 15; /* In front of butterflies, behind grass */
+            pointer-events: none; 
+            z-index: 15; 
         }
         .rain-drop {
             position: absolute;
             background-color: rgba(255, 255, 255, 0.7);
-            width: 2px;
-            height: 15px;
-            top: -20px;
+            width: 2px; height: 15px; top: -20px;
             animation: fall 1s linear infinite;
             border-radius: 2px;
         }
-        @keyframes fall {
-            to { transform: translateY(105vh); }
-        }
+        @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* Header Text Box */
+        /* Header Text Box (Now clickable to hide!) */
         .header-text {
             margin-top: 80px;
             background-color: rgba(255, 255, 255, 0.85);
@@ -113,7 +96,9 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 3px dashed #FF69B4;
             position: relative;
-            z-index: 5; /* In front of the rainbow */
+            z-index: 5; 
+            cursor: pointer;
+            transition: transform 1s ease, opacity 1s ease; /* Smooth hide animation */
         }
         h1 { margin: 0; font-size: 3rem; color: #FF1493; }
         p { font-size: 1.8rem; margin: 15px 0 0 0; color: #555; }
@@ -121,162 +106,85 @@
         /* The Grass */
         .grass {
             position: fixed;
-            bottom: 0;
-            width: 100%;
-            min-height: 25vh;
+            bottom: 0; width: 100%; min-height: 25vh;
             background-color: #7CFC00;
             border-top: 10px solid #32CD32;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-evenly;
-            flex-wrap: wrap;
-            padding-bottom: 20px;
-            z-index: 20;
+            display: flex; align-items: flex-end; justify-content: space-evenly;
+            padding-bottom: 20px; z-index: 20;
         }
 
-        /* --- NEW: WALKING PRINCESS STYLING --- */
-        #walkers-container {
-            position: fixed;
-            bottom: 25px; /* Sits exactly on the grass border */
-            width: 100%;
-            height: 120px; /* Enough room for them to walk */
-            pointer-events: none; /* Clicking flowers through them */
-            z-index: 22; /* In front of grass, but behind unicorn poop */
-        }
-        
-        /* The Walking Area for the Tea Set Message */
-        .walking-area {
-            position: absolute;
-            width: 100%; height: 100%;
-            pointer-events: auto; /* Re-enable clicking for the message */
-            cursor: pointer;
-        }
-
-        /* The full-body Princess container */
-        .princess-walker {
-            position: absolute;
-            width: 70px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Princess head (the emoji) */
-        .p-head {
-            font-size: 60px;
-            margin-bottom: -15px; /* Puts head over the dress */
-        }
-        /* Princess full body/dress (constructed with pure CSS) */
-        .p-body {
-            width: 60px;
-            height: 60px;
-            border-radius: 50% 50% 10px 10px; /* Rounded top for dress shape */
-            border: 3px solid white;
-            box-shadow: 2px 4px 5px rgba(0,0,0,0.2);
-            position: relative;
-        }
-        /* Little CSS feet/arms hint */
-        .p-body::after {
-            content: '';
-            position: absolute;
-            bottom: -8px; left: 10px; width: 40px; height: 10px;
-            background-color: #f1c40f; /* Gold shoes */
-            border-radius: 5px;
-        }
-
-        /* Walking Animations */
-        .p1 { 
-            animation: walkRight 25s linear infinite; 
-        }
-        .p1 .p-body { background-color: hotpink; }
-
-        .p2 { 
-            animation: walkLeft 20s linear infinite; 
-            filter: hue-rotate(90deg); /* Changes p2 to a purple dress */
-        }
-        
-        .tea-set-static {
-            position: absolute;
-            font-size: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 0;
-        }
-
-        @keyframes walkRight {
-            0% { left: -15%; transform: scaleX(1); }
-            48% { transform: scaleX(1); }
-            50% { left: 90%; transform: scaleX(-1); } /* Turn around */
-            98% { transform: scaleX(-1); }
-            100% { left: -15%; transform: scaleX(1); }
-        }
-        @keyframes walkLeft {
-            0% { left: 105%; transform: scaleX(-1); }
-            48% { transform: scaleX(-1); }
-            50% { left: 10%; transform: scaleX(1); } /* Turn around */
-            98% { transform: scaleX(1); }
-            100% { left: 105%; transform: scaleX(-1); }
-        }
-        /* --- END PRINCESS STYLING --- */
-
-        /* Scene Items (Flowers/Unicorns) */
+        /* Scene Items (Flowers/Tea set) */
         .scene-item {
             font-size: 70px;
-            margin: 0 10px;
             filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2));
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.4s ease;
+            cursor: pointer; user-select: none;
+            transition: transform 1s ease; /* Allows for smooth growing */
         }
+        
+        .tea-party { font-size: 80px; animation: bounce 4s ease-in-out infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* Unicorn Animations */
-        .unicorn { animation: prance 3s ease-in-out infinite; }
+        /* --- DRAGGABLE PRINCESS RIDERS --- */
+        .draggable-rider {
+            position: fixed;
+            cursor: grab;
+            z-index: 40;
+            user-select: none;
+            touch-action: none; /* Prevents screen scrolling while dragging on tablets */
+            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));
+        }
+        .draggable-rider:active { cursor: grabbing; }
+        .prancing { animation: prance 3s ease-in-out infinite; }
         @keyframes prance {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px) rotate(-5deg); }
         }
 
-        /* --- THE FIXES ARE HERE --- */
+        .rider-unicorn { font-size: 90px; }
+        
+        .rider-princess {
+            position: absolute;
+            top: -30px; /* Sits her on the unicorn's back */
+            left: 20px;
+            transform: scale(0.65);
+            display: flex; flex-direction: column; align-items: center;
+            pointer-events: none; /* Makes sure dragging the princess grabs the whole unit */
+        }
+        .p-head { font-size: 60px; margin-bottom: -15px; }
+        .p-body {
+            width: 60px; height: 60px;
+            border-radius: 50% 50% 10px 10px;
+            border: 3px solid white; box-shadow: 2px 4px 5px rgba(0,0,0,0.2);
+            position: relative; background-color: hotpink;
+        }
+        .p-body::after {
+            content: ''; position: absolute;
+            bottom: -8px; left: 10px; width: 40px; height: 10px;
+            background-color: #f1c40f; border-radius: 5px;
+        }
+        .p2-color .p-body { background-color: mediumpurple; }
+
         /* Poop Animation */
         .poop {
-            position: fixed; 
-            font-size: 50px;
-            z-index: 30; /* Highest item, sits in front of princesses */
-            animation: plop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            pointer-events: none; 
+            position: fixed; font-size: 50px; z-index: 30; 
+            animation: plop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; pointer-events: none; 
         }
-        @keyframes plop {
-            0% { transform: scale(0) translateY(-30px); opacity: 0; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
+        @keyframes plop { 0% { transform: scale(0) translateY(-30px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
-        /* Flower Grow */
-        .grow { transform: scale(1.6) translateY(-20px) !important; }
+        /* Flower Grow Effects */
+        .grown-flower { transform: scale(1.6) !important; } /* Permanent grow after rain */
+        .grow { transform: scale(2.2) translateY(-20px) !important; } /* Temporary click grow */
         
         /* Unicorn Cartwheel */
         .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
-        @keyframes cartwheel {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.4) rotate(180deg); }
-            100% { transform: scale(1) rotate(360deg); }
-        }
+        @keyframes cartwheel { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.4) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
 
         /* Pop-up Message Box */
         #tea-message {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #FFF0F5;
-            border: 5px solid #FF69B4;
-            border-radius: 30px;
-            padding: 30px;
-            font-size: 2.5rem;
-            color: #FF1493;
-            z-index: 100;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            cursor: pointer;
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: #FFF0F5; border: 5px solid #FF69B4; border-radius: 30px;
+            padding: 30px; font-size: 2.5rem; color: #FF1493; z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); cursor: pointer;
         }
     </style>
 </head>
@@ -293,7 +201,7 @@
 
     <div id="rain-layer"></div>
 
-    <div class="header-text">
+    <div class="header-text" onclick="this.style.transform='translateY(-200px)'; this.style.opacity='0'; this.style.pointerEvents='none';" title="Click to hide me!">
         <h1>Hello world, this is Giuliana.</h1>
         <p>Welcome to my garden tea party! 🫖✨</p>
     </div>
@@ -305,36 +213,30 @@
 
     <div class="grass">
         <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
-        <div class="scene-item unicorn" onclick="unicornSurprise(this)">🦄</div>
         <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
-        
-        <div id="walkers-container">
-            <div class="walking-area" onclick="showTeaMessage()" title="Click to talk to the princesses!">
-                
-                <div class="princess-walker p1">
-                    <div class="p-head">👸</div>
-                    <div class="p-body"></div>
-                </div>
-
-                <div class="tea-set-static">☕🧁🫖</div>
-
-                <div class="princess-walker p2">
-                    <div class="p-head">👸</div>
-                    <div class="p-body"></div>
-                </div>
-
-            </div>
-        </div>
-        
+        <div class="scene-item tea-party" onclick="showTeaMessage()" title="Click for tea!">☕🧁🫖</div>
         <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
-        <div class="scene-item unicorn" onclick="unicornSurprise(this)">🦄</div>
         <div class="scene-item flower" onclick="makeGrow(this)">🌻</div>
     </div>
 
+    <div class="draggable-rider prancing" style="left: 15%; bottom: 30px;">
+        <div class="rider-princess">
+            <div class="p-head">👸</div><div class="p-body"></div>
+        </div>
+        <div class="rider-unicorn">🦄</div>
+    </div>
+
+    <div class="draggable-rider prancing" style="right: 15%; bottom: 30px;">
+        <div class="rider-princess p2-color">
+            <div class="p-head">👸</div><div class="p-body"></div>
+        </div>
+        <div class="rider-unicorn" style="transform: scaleX(-1);">🦄</div>
+    </div>
+
     <script>
-        // Updated Sky Phases: Day, Sunset, Night, RAIN, RAINBOW
-        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50', '#778899', '#87CEEB']; // Added gray, back to blue
-        let sunIcons = ['☀️', '🌞', '🌙', '☁️', '☀️']; // Added cloud for storm, sun for rainbow
+        // 1. SKY & RAIN LOGIC
+        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50', '#778899', '#87CEEB']; 
+        let sunIcons = ['☀️', '🌞', '🌙', '☁️', '☀️']; 
         let skyIndex = 0;
 
         function changeSky() {
@@ -342,74 +244,62 @@
             document.getElementById('sky').style.backgroundColor = skyColors[skyIndex];
             document.querySelector('.sun').innerText = sunIcons[skyIndex];
 
-            // Manage Special Layers (Rain and Rainbow)
             const rainLayer = document.getElementById('rain-layer');
             const rainbowLayer = document.getElementById('rainbow-layer');
             const butterflies = document.getElementById('bugs');
+            const flowers = document.querySelectorAll('.flower');
 
-            // Hide everything first
             rainLayer.style.display = 'none';
             rainbowLayer.style.display = 'none';
-            butterflies.style.opacity = '1'; // Show butterflies
+            butterflies.style.opacity = '1'; 
 
-            // NEW: RAIN phase (index 3)
-            if (skyIndex === 3) {
+            if (skyIndex === 0) {
+                // Reset flowers when it is a new sunny day
+                flowers.forEach(f => f.classList.remove('grown-flower'));
+            } else if (skyIndex === 3) {
+                // Rain!
                 rainLayer.style.display = 'block';
-                butterflies.style.opacity = '0'; // Butterflies hide during rain
-                createRain(); // Generate the rain particles
-            } 
-            // NEW: RAINBOW phase (index 4)
-            else if (skyIndex === 4) {
+                butterflies.style.opacity = '0'; 
+                createRain(); 
+            } else if (skyIndex === 4) {
+                // Rainbow! Grow the flowers!
                 rainbowLayer.style.display = 'block';
+                flowers.forEach(f => f.classList.add('grown-flower'));
             }
         }
 
-        // NEW: Function to generate rain drop divs
         function createRain() {
             const rainContainer = document.getElementById('rain-layer');
-            rainContainer.innerHTML = ''; // Clear previous rain
-            
-            // Create 100 random drops
+            rainContainer.innerHTML = ''; 
             for (let i = 0; i < 100; i++) {
                 let drop = document.createElement('div');
                 drop.classList.add('rain-drop');
-                drop.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
-                drop.style.animationDelay = Math.random() * 2 + 's'; // Random start time
-                drop.style.opacity = Math.random(); // Varied opacity
+                drop.style.left = Math.random() * 100 + 'vw'; 
+                drop.style.animationDelay = Math.random() * 2 + 's'; 
+                drop.style.opacity = Math.random(); 
                 rainContainer.appendChild(drop);
             }
         }
 
+        // 2. CLICK EFFECTS (Flowers, Poop, Tea)
         function makeGrow(element) {
             element.classList.add('grow');
-            setTimeout(() => {
-                element.classList.remove('grow');
-            }, 800); 
+            setTimeout(() => { element.classList.remove('grow'); }, 800); 
         }
 
         function unicornSurprise(element) {
-            // Do the magic cartwheel
             element.classList.add('spin-magic');
-            setTimeout(() => {
-                element.classList.remove('spin-magic');
-            }, 800); 
+            setTimeout(() => { element.classList.remove('spin-magic'); }, 800); 
 
-            // Create the poop element
             let poop = document.createElement('div');
             poop.innerText = '💩'; 
             poop.className = 'poop';
             
-            // Figure out exactly where the unicorn is on the screen
             let rect = element.getBoundingClientRect();
-            
-            // Drop it right near the unicorn's back legs
-            poop.style.left = (rect.left - 10) + 'px'; 
-            poop.style.top = (rect.top + 20) + 'px'; 
-            
-            // Add it to the page
+            poop.style.left = (rect.left + 40) + 'px'; 
+            poop.style.top = (rect.top + 50) + 'px'; 
             document.body.appendChild(poop);
 
-            // Make it fade away after 3 seconds
             setTimeout(() => {
                 poop.style.transition = "opacity 1s ease-out";
                 poop.style.opacity = "0";
@@ -417,12 +307,69 @@
             }, 3000);
         }
 
-        function showTeaMessage() {
-            document.getElementById('tea-message').style.display = 'block';
+        function showTeaMessage() { document.getElementById('tea-message').style.display = 'block'; }
+        function closeMessage() { document.getElementById('tea-message').style.display = 'none'; }
+
+        // 3. DRAG TO FLY LOGIC (Works on Mouse and Touch/Tablets!)
+        const riders = document.querySelectorAll('.draggable-rider');
+        let activeRider = null;
+        let isDragging = false;
+        let offsetX = 0; let offsetY = 0;
+
+        riders.forEach(rider => {
+            rider.addEventListener('mousedown', dragStart);
+            rider.addEventListener('touchstart', dragStart, { passive: false });
+        });
+
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+
+        function dragStart(e) {
+            activeRider = this;
+            isDragging = false; 
+            
+            let rect = activeRider.getBoundingClientRect();
+            
+            if (e.type === 'touchstart') {
+                offsetX = e.touches[0].clientX - rect.left;
+                offsetY = e.touches[0].clientY - rect.top;
+            } else {
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+            }
+            
+            // Stop prancing while dragging so it doesn't shake
+            activeRider.classList.remove('prancing');
         }
-        
-        function closeMessage() {
-            document.getElementById('tea-message').style.display = 'none';
+
+        function drag(e) {
+            if (activeRider) {
+                e.preventDefault(); // Prevents screen from pulling down on mobile
+                isDragging = true;
+                
+                let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+                
+                activeRider.style.left = (clientX - offsetX) + 'px';
+                activeRider.style.top = (clientY - offsetY) + 'px';
+                activeRider.style.bottom = 'auto'; 
+                activeRider.style.right = 'auto';
+            }
+        }
+
+        function dragEnd(e) {
+            if (activeRider) {
+                // If they just clicked and didn't drag, drop a poop!
+                if (!isDragging) {
+                    unicornSurprise(activeRider);
+                }
+                
+                // Start prancing again
+                activeRider.classList.add('prancing');
+                activeRider = null;
+            }
         }
     </script>
 
