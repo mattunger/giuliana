@@ -16,23 +16,53 @@
             transition: background-color 1.5s ease; /* Smooth fade for sky changes */
         }
         
-        /* The Sun */
+        /* The Sun / Moon / Storm Cloud */
         .sun {
             font-size: 100px;
-            position: absolute;
+            position: fixed; /* Keeps it fixed in the corner */
             top: 20px;
             right: 40px;
             animation: spin 20s linear infinite;
             cursor: pointer;
             user-select: none;
+            z-index: 50; /* Above almost everything */
         }
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
 
+        /* --- NEW: RAINBOW LAYER --- */
+        #rainbow-layer {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 350px;
+            /* Creates the arch */
+            border-radius: 350px 350px 0 0;
+            /* The radial gradient creates the bands of color */
+            background: radial-gradient(circle at center 100%,
+                transparent 50%,
+                violet 50%, violet 55%,
+                indigo 55%, indigo 60%,
+                blue 60%, blue 65%,
+                green 65%, green 70%,
+                yellow 70%, yellow 75%,
+                orange 75%, orange 80%,
+                red 80%, red 85%,
+                transparent 85%
+            );
+            filter: blur(5px); /* Makes it look dreamy */
+            opacity: 0.7;
+            z-index: 2; /* Behind the text header */
+        }
+
         /* Flying Butterflies */
+        .butterfly-container { transition: opacity 1s ease; }
         .butterfly {
-            position: absolute;
+            position: fixed;
             font-size: 40px;
             top: 150px;
             left: -50px;
@@ -52,6 +82,27 @@
             100% { left: 110%; transform: translateY(0px); }
         }
 
+        /* --- NEW: RAIN LAYER & Drop styling --- */
+        #rain-layer {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Can click through the rain */
+            z-index: 15; /* In front of butterflies, behind grass */
+        }
+        .rain-drop {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            width: 2px;
+            height: 15px;
+            top: -20px;
+            animation: fall 1s linear infinite;
+            border-radius: 2px;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh); }
+        }
+
         /* Header Text Box */
         .header-text {
             margin-top: 80px;
@@ -62,7 +113,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 3px dashed #FF69B4;
             position: relative;
-            z-index: 5;
+            z-index: 5; /* In front of the rainbow */
         }
         h1 { margin: 0; font-size: 3rem; color: #FF1493; }
         p { font-size: 1.8rem; margin: 15px 0 0 0; color: #555; }
@@ -83,42 +134,114 @@
             z-index: 20;
         }
 
-        /* All Scene Items */
+        /* --- NEW: WALKING PRINCESS STYLING --- */
+        #walkers-container {
+            position: fixed;
+            bottom: 25px; /* Sits exactly on the grass border */
+            width: 100%;
+            height: 120px; /* Enough room for them to walk */
+            pointer-events: none; /* Clicking flowers through them */
+            z-index: 22; /* In front of grass, but behind unicorn poop */
+        }
+        
+        /* The Walking Area for the Tea Set Message */
+        .walking-area {
+            position: absolute;
+            width: 100%; height: 100%;
+            pointer-events: auto; /* Re-enable clicking for the message */
+            cursor: pointer;
+        }
+
+        /* The full-body Princess container */
+        .princess-walker {
+            position: absolute;
+            width: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Princess head (the emoji) */
+        .p-head {
+            font-size: 60px;
+            margin-bottom: -15px; /* Puts head over the dress */
+        }
+        /* Princess full body/dress (constructed with pure CSS) */
+        .p-body {
+            width: 60px;
+            height: 60px;
+            border-radius: 50% 50% 10px 10px; /* Rounded top for dress shape */
+            border: 3px solid white;
+            box-shadow: 2px 4px 5px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        /* Little CSS feet/arms hint */
+        .p-body::after {
+            content: '';
+            position: absolute;
+            bottom: -8px; left: 10px; width: 40px; height: 10px;
+            background-color: #f1c40f; /* Gold shoes */
+            border-radius: 5px;
+        }
+
+        /* Walking Animations */
+        .p1 { 
+            animation: walkRight 25s linear infinite; 
+        }
+        .p1 .p-body { background-color: hotpink; }
+
+        .p2 { 
+            animation: walkLeft 20s linear infinite; 
+            filter: hue-rotate(90deg); /* Changes p2 to a purple dress */
+        }
+        
+        .tea-set-static {
+            position: absolute;
+            font-size: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+        }
+
+        @keyframes walkRight {
+            0% { left: -15%; transform: scaleX(1); }
+            48% { transform: scaleX(1); }
+            50% { left: 90%; transform: scaleX(-1); } /* Turn around */
+            98% { transform: scaleX(-1); }
+            100% { left: -15%; transform: scaleX(1); }
+        }
+        @keyframes walkLeft {
+            0% { left: 105%; transform: scaleX(-1); }
+            48% { transform: scaleX(-1); }
+            50% { left: 10%; transform: scaleX(1); } /* Turn around */
+            98% { transform: scaleX(1); }
+            100% { left: 105%; transform: scaleX(-1); }
+        }
+        /* --- END PRINCESS STYLING --- */
+
+        /* Scene Items (Flowers/Unicorns) */
         .scene-item {
             font-size: 70px;
             margin: 0 10px;
             filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.2));
             cursor: pointer;
             user-select: none;
-            transition: transform 0.4s ease; /* For clicking effects */
+            transition: transform 0.4s ease;
         }
 
-        /* Special Animations */
-        .unicorn {
-            animation: prance 3s ease-in-out infinite;
-        }
+        /* Unicorn Animations */
+        .unicorn { animation: prance 3s ease-in-out infinite; }
         @keyframes prance {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px) rotate(-5deg); }
         }
 
-        .tea-party {
-            font-size: 100px;
-            margin: 0 20px;
-            animation: bounce 4s ease-in-out infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
         /* --- THE FIXES ARE HERE --- */
-        
-        /* 1. The Poop Animation (Moved above the grass!) */
+        /* Poop Animation */
         .poop {
-            position: fixed; /* Keeps it exactly where you click regardless of scrolling */
+            position: fixed; 
             font-size: 50px;
-            z-index: 30; /* 30 is higher than the grass's 20, so it sits in front! */
+            z-index: 30; /* Highest item, sits in front of princesses */
             animation: plop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             pointer-events: none; 
         }
@@ -127,12 +250,11 @@
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        /* 2. The Unicorn Cartwheel (Now using a proper keyframe animation) */
+        /* Flower Grow */
         .grow { transform: scale(1.6) translateY(-20px) !important; }
         
-        .spin-magic { 
-            animation: cartwheel 0.8s ease-in-out !important; 
-        }
+        /* Unicorn Cartwheel */
+        .spin-magic { animation: cartwheel 0.8s ease-in-out !important; }
         @keyframes cartwheel {
             0% { transform: scale(1) rotate(0deg); }
             50% { transform: scale(1.4) rotate(180deg); }
@@ -162,8 +284,14 @@
 
     <div class="sun" onclick="changeSky()" title="Click to change the sky!">☀️</div>
 
-    <div class="butterfly" onclick="this.style.display='none'">🦋</div>
-    <div class="butterfly butterfly2" onclick="this.style.display='none'">🦋</div>
+    <div id="rainbow-layer"></div>
+
+    <div class="butterfly-container" id="bugs">
+        <div class="butterfly" onclick="this.style.display='none'">🦋</div>
+        <div class="butterfly butterfly2" onclick="this.style.display='none'">🦋</div>
+    </div>
+
+    <div id="rain-layer"></div>
 
     <div class="header-text">
         <h1>Hello world, this is Giuliana.</h1>
@@ -180,7 +308,23 @@
         <div class="scene-item unicorn" onclick="unicornSurprise(this)">🦄</div>
         <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
         
-        <div class="scene-item tea-party" onclick="showTeaMessage()" title="Click us!">👸☕🧁👸</div>
+        <div id="walkers-container">
+            <div class="walking-area" onclick="showTeaMessage()" title="Click to talk to the princesses!">
+                
+                <div class="princess-walker p1">
+                    <div class="p-head">👸</div>
+                    <div class="p-body"></div>
+                </div>
+
+                <div class="tea-set-static">☕🧁🫖</div>
+
+                <div class="princess-walker p2">
+                    <div class="p-head">👸</div>
+                    <div class="p-body"></div>
+                </div>
+
+            </div>
+        </div>
         
         <div class="scene-item flower" onclick="makeGrow(this)">🌷😊</div>
         <div class="scene-item unicorn" onclick="unicornSurprise(this)">🦄</div>
@@ -188,14 +332,52 @@
     </div>
 
     <script>
-        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50']; 
-        let sunIcons = ['☀️', '🌞', '🌙']; 
+        // Updated Sky Phases: Day, Sunset, Night, RAIN, RAINBOW
+        let skyColors = ['#87CEEB', '#FFB6C1', '#2C3E50', '#778899', '#87CEEB']; // Added gray, back to blue
+        let sunIcons = ['☀️', '🌞', '🌙', '☁️', '☀️']; // Added cloud for storm, sun for rainbow
         let skyIndex = 0;
 
         function changeSky() {
             skyIndex = (skyIndex + 1) % skyColors.length;
             document.getElementById('sky').style.backgroundColor = skyColors[skyIndex];
             document.querySelector('.sun').innerText = sunIcons[skyIndex];
+
+            // Manage Special Layers (Rain and Rainbow)
+            const rainLayer = document.getElementById('rain-layer');
+            const rainbowLayer = document.getElementById('rainbow-layer');
+            const butterflies = document.getElementById('bugs');
+
+            // Hide everything first
+            rainLayer.style.display = 'none';
+            rainbowLayer.style.display = 'none';
+            butterflies.style.opacity = '1'; // Show butterflies
+
+            // NEW: RAIN phase (index 3)
+            if (skyIndex === 3) {
+                rainLayer.style.display = 'block';
+                butterflies.style.opacity = '0'; // Butterflies hide during rain
+                createRain(); // Generate the rain particles
+            } 
+            // NEW: RAINBOW phase (index 4)
+            else if (skyIndex === 4) {
+                rainbowLayer.style.display = 'block';
+            }
+        }
+
+        // NEW: Function to generate rain drop divs
+        function createRain() {
+            const rainContainer = document.getElementById('rain-layer');
+            rainContainer.innerHTML = ''; // Clear previous rain
+            
+            // Create 100 random drops
+            for (let i = 0; i < 100; i++) {
+                let drop = document.createElement('div');
+                drop.classList.add('rain-drop');
+                drop.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                drop.style.animationDelay = Math.random() * 2 + 's'; // Random start time
+                drop.style.opacity = Math.random(); // Varied opacity
+                rainContainer.appendChild(drop);
+            }
         }
 
         function makeGrow(element) {
